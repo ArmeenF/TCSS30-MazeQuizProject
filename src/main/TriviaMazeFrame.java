@@ -1,63 +1,95 @@
 package main;
 
+import controller.Controller;
+import model.Model;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TriviaMazeFrame extends JFrame {
 
-    private JMenuBar mb;
+    private JMenuBar myMenuBar;
 
-    private JMenu x,x1;
+    private JMenu myFileMenu;
 
-    private JMenuItem m1;
+    private JMenu myHelpMenu;
 
-    private JMenuItem m2;
+    private JMenuItem mySaveGameMenuItem;
 
-    private JMenuItem m3;
+    private JMenuItem myLoadGameMenuItem;
 
-    private JMenuItem m4;
+    private JMenuItem myNewGameMenuItem;
 
-    private JMenuItem m5;
+    private JMenuItem myExitMenuItem;
 
-    private JMenuItem m6;
+    private JMenuItem myAboutMenuItem;
 
-    private JFrame f;
+    private JMenuItem myHowToPlayMenuItem;
 
-    public TriviaMazeFrame() {
+    private Model myModel;
+
+    private TriviaMazeFrame() {
+        //Does nothing..
+    }
+
+    public TriviaMazeFrame(final Model theModel) {
+        myModel = theModel;
         layoutComponents();
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void layoutComponents() {
+        this.setTitle("Joseph & Armeen's Trivia Maze Game");
+        myMenuBar = new JMenuBar();
+        setUpFileMenu();
+        setUpFileMenuHandlers();
+        setUpHelpMenu();
+        setUpHelpMenuHandlers();
+        this.setJMenuBar(myMenuBar);
+        this.add(new Controller(myModel));
+        this.setSize(700, 700);
+        this.setVisible(true);
+    }
 
-        f = new JFrame("Joseph & Armeen's Trivia Maze Game");
+    private void setUpFileMenu() {
+        myFileMenu = new JMenu("File");
+        myNewGameMenuItem = new JMenuItem("New Game");
+        mySaveGameMenuItem = new JMenuItem("Save Game");
+        myLoadGameMenuItem = new JMenuItem("Load Game");
+        myExitMenuItem = new JMenuItem("Exit");
+        myFileMenu.add(mySaveGameMenuItem);
+        myFileMenu.add(myLoadGameMenuItem);
+        myFileMenu.add(myNewGameMenuItem);
+        myFileMenu.add(myExitMenuItem);
+    }
 
-        mb = new JMenuBar();
+    private void setUpHelpMenu() {
+        myHelpMenu = new JMenu("Help");
+        myAboutMenuItem = new JMenuItem("About");
+        myHowToPlayMenuItem = new JMenuItem("Game Play instructions");
+        myHelpMenu.add(myAboutMenuItem);
+        myHelpMenu.add(myHowToPlayMenuItem);
+        myMenuBar.add(myFileMenu);
+        myMenuBar.add(myHelpMenu);
+    }
 
-        x = new JMenu("File");
-        x1 = new JMenu("Help");
-        // create menuitems for File
-        m1 = new JMenuItem("Save Game");
-        m2 = new JMenuItem("Load Game");
-        m3 = new JMenuItem("New Game");
-        m4 = new JMenuItem("Exit");
-        // create menuitems for Help
-        m5 = new JMenuItem("About");
-        m6 = new JMenuItem("Game Play instructions");
-        // add menu items to File
-        x.add(m1);
-        x.add(m2);
-        x.add(m3);
-        x.add(m4);
-        // add menu items to Help
-        x1.add(m5);
-        x1.add(m6);
-        // add menu to menu bar
-        mb.add(x);
-        mb.add(x1);
-        // add menubar to frame
-        f.setJMenuBar(mb);
-        // set the size of the frame
-        f.setSize(700, 700);
-        f.setVisible(true);
+    private void setUpFileMenuHandlers() {
+        myNewGameMenuItem.addActionListener(e -> myModel.setUpNewGame());
+        myExitMenuItem.addActionListener(e -> this.dispose());
+    }
+
+    private void setUpHelpMenuHandlers() {
+        String about = "This is Trivia Maze, produced for TCSS360 B," +
+                "made by Armeen Farange and Joseph Graves in 2021.";
+        //TODO Add help string.
+        String help = "idk just click some buttons";
+        myAboutMenuItem.addActionListener(e ->
+                JOptionPane.showMessageDialog(null, about));
+        myHowToPlayMenuItem.addActionListener(e ->
+                JOptionPane.showMessageDialog(null, help));
     }
 }

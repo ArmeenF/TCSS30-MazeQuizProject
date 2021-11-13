@@ -132,6 +132,8 @@ public class Model implements ModelInterface {
      * @param theValue the value to set.
      */
     public void setSymmetricalVertice(final int theRow, final int theColumn, final boolean theValue) {
+        //SonarLint is screaming about this,
+        //but the swapped parameters are so that they're mirrored on the diagonal.
         setVertice(theRow, theColumn, theValue);
         setVertice(theColumn, theRow, theValue);
     }
@@ -140,7 +142,7 @@ public class Model implements ModelInterface {
      * Sets up a new game. Sets player position to 0, and sets the appropriate vertex values in the
      * adjacency matrix.
      */
-    private void setUpNewGame() {
+    public void setUpNewGame() {
         myPlayerPosition = 0;
         myAdjacencyMatrix = new boolean[END_NODE + 1][END_NODE + 1];
         for (int i = 0; i < END_NODE + 1; i++){

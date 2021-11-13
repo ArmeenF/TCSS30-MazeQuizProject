@@ -1,5 +1,7 @@
 package main;
 
+import model.Model;
+
 import javax.swing.*;
 
 /**
@@ -21,6 +23,6 @@ public class TriviaMazeMain {
      * @param args Unused.
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TriviaMazeFrame::new);
+        SwingUtilities.invokeLater(() -> new TriviaMazeFrame(new Model()));
     }
 }
