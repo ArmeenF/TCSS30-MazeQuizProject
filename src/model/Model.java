@@ -22,7 +22,7 @@ public class Model implements ModelInterface {
     /**
      * The row length of the nodes, if they were to be placed in a square array.
      */
-    public static final int ROW_LENGTH = (int) Math.sqrt(END_NODE + 1.0);
+    public static final int ROW_LENGTH = 4;
 
     /**
      * The adjacency matrix which shows valid moves.
