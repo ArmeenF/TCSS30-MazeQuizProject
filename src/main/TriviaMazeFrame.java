@@ -2,6 +2,7 @@ package main;
 
 import controller.Controller;
 import model.Model;
+import view.View;
 
 import javax.swing.*;
 
@@ -45,8 +46,11 @@ public class TriviaMazeFrame extends JFrame {
         setUpHelpMenu();
         setUpHelpMenuHandlers();
         this.setJMenuBar(myMenuBar);
-        this.add(new Controller(myModel));
-        this.setSize(700, 700);
+        JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        pane.add(new View(myModel));
+        pane.add(new Controller(myModel));
+        this.add(pane);
+        this.setSize(1000, 700);
         this.setVisible(true);
     }
 

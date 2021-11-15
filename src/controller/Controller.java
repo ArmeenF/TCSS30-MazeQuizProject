@@ -88,19 +88,20 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public Controller(Model theModel) {
         myModel = theModel;
-        layoutQuestionBox();
-        layoutMovementBox();
+        this.add(createQuestionBox());
+        this.add(createMovementGrid());
         setUpDirectionListeners();
         this.setBackground(Color.gray);
-        this.setSize(300, 300);
+        this.setSize(300, 700);
         this.setVisible(true);
         myModel.addPropertyChangeListener(this);
     }
 
     /**
-     * Lays out components for the question box and adds it to the panel.
+     * Creates the question box.
+     * @return the question box.
      */
-    private void layoutQuestionBox() {
+    private Box createQuestionBox() {
         myQuestionLabel = new JLabel("", SwingConstants.CENTER);
         myQuestionLabel.setFont(new Font("Serif", Font.CENTER_BASELINE, 24));
         myAnswerButtonOne = new JButton("");
@@ -114,13 +115,14 @@ public class Controller extends JPanel implements PropertyChangeListener {
         box.add(myAnswerButtonThree);
         box.add(myAnswerButtonFour);
         this.setAnswerButtonEnabled(false);
-        this.add(box);
+        return box;
     }
 
     /**
-     * Creates the layout for the movement box.
+     * Creates a movement box.
+     * @return a movement box.
      */
-    private void layoutMovementBox() {
+    private JPanel createMovementGrid() {
         myUpButton = new JButton("↑");
         myDownButton = new JButton("↓");
         myLeftButton = new JButton("←");
@@ -138,7 +140,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
         movementPanel.add(myRightButton);
         movementPanel.setSize(150,100);
         checkMovementButtonValidity();
-        this.add(movementPanel);
+        return movementPanel;
     }
 
     /**

@@ -143,7 +143,7 @@ public class Model implements ModelInterface {
      * adjacency matrix.
      */
     public void setUpNewGame() {
-        myPlayerPosition = 0;
+        this.setPlayerPosition(0);
         myAdjacencyMatrix = new boolean[END_NODE + 1][END_NODE + 1];
         for (int i = 0; i < END_NODE + 1; i++){
             if ((i+1)%ROW_LENGTH != 0) {

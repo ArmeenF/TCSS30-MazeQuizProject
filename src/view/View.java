@@ -1,86 +1,92 @@
 package view;
 
+import model.Model;
+import model.ModelInterface;
+
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
-public class View extends JPanel {
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(View::createAndShowJFrame);
+public class View extends JPanel implements PropertyChangeListener {
+
+    public static final String PLAYER_ICON = "☻";
+
+    private JButton[] myNodes = new JButton[Model.END_NODE + 1];
+
+    private int myPosition;
+
+    private Model myModel;
+
+    private View() {
+        //... Does Nothing...
     }
 
-    private static void createAndShowJFrame(){
-        JFrame f = new JFrame("Grid Layout Example");
-
-        // Create layout and add buttons to show restraints
-        JPanel p = new JPanel(new GridLayout(7, 8));
-
-
-
-        p.add(new JButton("A"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("B"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("C"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("D"));
-
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-
-        p.add(new JButton("E"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("F"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("G"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("H"));
-
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-
-        p.add(new JButton("I"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("J"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("K"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("L"));
-
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-        p.add(new JButton("Blank"));
-        p.add(new JLabel("U/D",SwingConstants.CENTER));
-
-        p.add(new JButton("M"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("N"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("O"));
-        p.add(new JLabel("L/R",SwingConstants.CENTER));
-        p.add(new JButton("P"));
+    public View(final Model theModel) {
+        myModel = theModel;
+        myModel.addPropertyChangeListener(this);
+        createAndShowPanel();
+        updatePlayerNode();
+    }
 
 
-        f.setContentPane(p);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        p.setBackground(Color.GRAY);
+    private void createAndShowPanel(){
+        this.setLayout(new GridLayout(7, 8));
+        Arrays.setAll(myNodes, n -> new JButton(""));
+        createLeftRightRow(0);
+        createUpDownRow();
+        createLeftRightRow(4);
+        createUpDownRow();
+        createLeftRightRow(8);
+        createUpDownRow();
+        createLeftRightRow(12);
+        this.setBackground(Color.GRAY);
+        this.setVisible(true);
+    }
 
-        // set the size of frame
-        f.setSize(400, 400);
+    private void createUpDownRow() {
+        String upDownArrow = "↕";
+        String blankMessage = "Blank";
+        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JButton(blankMessage));
+        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JButton(blankMessage));
+        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JButton(blankMessage));
+        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+    }
 
-        f.show();
+    private void createLeftRightRow(final int theOffset) {
+        final String leftRightArrow = "↔";
+        this.add(myNodes[theOffset]);
+        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
+        this.add(myNodes[1 + theOffset]);
+        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
+        this.add(myNodes[2 + theOffset]);
+        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
+        this.add(myNodes[3 + theOffset]);
+    }
+
+    private void updatePlayerNode() {
+        myNodes[myPosition].setText("");
+        myPosition = myModel.getPlayerPosition();
+        myNodes[myPosition].setText(View.PLAYER_ICON);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent theEvent) {
+        if (theEvent.getPropertyName().equals(ModelInterface.PLAYER_POSITION)) {
+            updatePlayerNode();
+            if (myModel.isPlayerAtEnd()) {
+                JOptionPane.showMessageDialog(null, "You win!!!");
+                myModel.setUpNewGame();
+            }
+        }
+
+//        if (!myModel.canPlayerWin()) {
+//            JOptionPane.showMessageDialog(null, "You lose :(");
+//            myModel.setUpNewGame();
+//        }
     }
 }
