@@ -79,15 +79,15 @@ public class Model implements ModelInterface {
         int current = myPlayerPosition;
         nodeList.add(current);
         nodeDeque.add(current);
-        while (!nodeDeque.isEmpty()) {
-            for (int i = 0; i < END_NODE + 1; i++) {
+        do {
+            current = nodeDeque.pop();
+            for (int i = 0; i <= END_NODE; i++) {
                 if (myAdjacencyMatrix[current][i] && !nodeList.contains(i)) {
                     nodeList.add(i);
                     nodeDeque.add(i);
                 }
             }
-            current = nodeDeque.pop();
-        }
+        } while (!nodeDeque.isEmpty());
         return nodeList.contains(END_NODE);
     }
 
@@ -144,15 +144,19 @@ public class Model implements ModelInterface {
      */
     public void setUpNewGame() {
         this.setPlayerPosition(0);
+        boolean[][] old = myAdjacencyMatrix;
         myAdjacencyMatrix = new boolean[END_NODE + 1][END_NODE + 1];
         for (int i = 0; i < END_NODE + 1; i++){
             if ((i+1)%ROW_LENGTH != 0) {
-                setSymmetricalVertice(i, i + 1, true);
+                myAdjacencyMatrix[i][i + 1] = true;
+                myAdjacencyMatrix[i + 1][i] = true;
             }
             if (i + ROW_LENGTH < END_NODE + 1) {
-                setSymmetricalVertice(i, i+4, true);
+                myAdjacencyMatrix[i][i + ROW_LENGTH] = true;
+                myAdjacencyMatrix[i + ROW_LENGTH][i] = true;
             }
         }
+        myPropertyChangeSupport.firePropertyChange(ModelInterface.ADJACENCY_MATRIX, old, myAdjacencyMatrix);
     }
 
 
