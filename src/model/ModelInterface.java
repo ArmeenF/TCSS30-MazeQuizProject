@@ -53,7 +53,7 @@ public interface ModelInterface {
      * Sets the player position.
      * @param thePosition the position to set.
      */
-    void setPlayerPosition(final int thePosition);
+    void setPlayerPosition(int thePosition);
 
     /**
      * Sets the row column pair in the adjacency matrix to a boolean value.
@@ -61,31 +61,32 @@ public interface ModelInterface {
      * @param theColumn The column to set.
      * @param theValue The boolean value.
      */
-    void setVertice(final int theRow, final int theColumn, final boolean theValue);
+    void setVertice(int theRow, int theColumn, boolean theValue);
 
     /**
      * Adds a listener to this model.
      * @param thePropertyName The name of the property to listen for.
      * @param theListener The listener to add.
      */
-    void addPropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener);
+    void addPropertyChangeListener(String thePropertyName, PropertyChangeListener theListener);
 
     /**
      * Adds a listener to this model.
      * @param theListener The listener to add.
      */
-    void addPropertyChangeListener(final PropertyChangeListener theListener);
+    void addPropertyChangeListener(PropertyChangeListener theListener);
 
     /**
      * Removes a listener with a property name from this model.
      * @param thePropertyName The property name.
      * @param theListener The listener to remove.
      */
-    void removePropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener);
+    void removePropertyChangeListener(String thePropertyName,
+                                      PropertyChangeListener theListener);
 
     /**
      * Removes a listener from this model.
      * @param theListener the listener to remove.
      */
-    void removePropertyChangeListener(final PropertyChangeListener theListener);
+    void removePropertyChangeListener(PropertyChangeListener theListener);
 }

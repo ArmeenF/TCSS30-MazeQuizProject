@@ -36,7 +36,7 @@ public class SQLTriviaDeck implements TriviaDeck {
      * @param theDatabaseName database file name.
      */
     public SQLTriviaDeck(final String theDatabaseName) {
-        SQLiteDataSource data = createDatasource(theDatabaseName);
+        final SQLiteDataSource data = createDatasource(theDatabaseName);
         loadListWithResults(data);
     }
 
@@ -46,11 +46,11 @@ public class SQLTriviaDeck implements TriviaDeck {
      * @return a datasource object.
      */
     private SQLiteDataSource createDatasource(final String theDatabasename) {
-        SQLiteDataSource source = new SQLiteDataSource();
+        final SQLiteDataSource source = new SQLiteDataSource();
         try {
-            source.setUrl("jdbc:sqlite:"+theDatabasename);
-        } catch (final Exception theException) {
-            theException.printStackTrace();
+            source.setUrl("jdbc:sqlite:" + theDatabasename);
+        } catch (final Exception exception) { //TODO Ask instructor for exception type.
+            exception.printStackTrace();
         }
         return source;
     }
@@ -60,16 +60,16 @@ public class SQLTriviaDeck implements TriviaDeck {
      * @param theDataSource the datasource object.
      */
     private void loadListWithResults(final SQLiteDataSource theDataSource) {
-        try (final Connection connection = theDataSource.getConnection();
-             final Statement statement = connection.createStatement()) {
-            ResultSet result = statement.executeQuery("SELECT * FROM Questions");
+        try (Connection connection = theDataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            final ResultSet result = statement.executeQuery("SELECT * FROM Questions");
             while (result.next()) {
                 myQuestionList.add(Question.createQuestion(result.getString("Question"),
                         result.getString("Truth"), result.getString("Herring1"),
                         result.getString("Herring2"), result.getString("Herring3")));
             }
-        } catch (final SQLException theException) {
-            theException.printStackTrace();
+        } catch (final SQLException exception) {
+            exception.printStackTrace();
         }
     }
 

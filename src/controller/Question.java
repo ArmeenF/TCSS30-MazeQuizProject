@@ -8,7 +8,7 @@ import java.util.Map;
  * @author Joseph Graves
  * @version Fall 2021
  */
-public class Question implements QuestionInterface{
+public class Question implements QuestionInterface {
 
     /**
      * The question being asked.
@@ -40,7 +40,7 @@ public class Question implements QuestionInterface{
      */
     public static Question createQuestion(final String theQuestion, final String theCorrect,
                                           final String ... theIncorrect) {
-        Map<String, Boolean> answerMap = new HashMap<>();
+        final Map<String, Boolean> answerMap = new HashMap<>();
         answerMap.put(theCorrect, true);
         for (String incorrect : theIncorrect) {
             answerMap.put(incorrect, false);

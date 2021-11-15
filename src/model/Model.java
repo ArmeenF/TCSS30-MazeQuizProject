@@ -74,8 +74,8 @@ public class Model implements ModelInterface {
          * the player's position as the start point.
          * If END_NODE isn't on the list, the player cannot win.
          */
-        List<Integer> nodeList = new ArrayList<>();
-        Deque<Integer> nodeDeque = new ArrayDeque<>();
+        final List<Integer> nodeList = new ArrayList<>();
+        final Deque<Integer> nodeDeque = new ArrayDeque<>();
         int current = myPlayerPosition;
         nodeList.add(current);
         nodeDeque.add(current);
@@ -93,20 +93,23 @@ public class Model implements ModelInterface {
 
     @Override
     public void setPlayerPosition(final int thePosition) {
-        int oldValue = myPlayerPosition;
+        final int oldValue = myPlayerPosition;
         myPlayerPosition = thePosition;
-        myPropertyChangeSupport.firePropertyChange(ModelInterface.PLAYER_POSITION, oldValue, thePosition);
+        myPropertyChangeSupport.firePropertyChange(ModelInterface.PLAYER_POSITION,
+                oldValue, thePosition);
     }
 
     @Override
     public void setVertice(final int theRow, final int theColumn, final boolean theValue) {
-        boolean oldValue = myAdjacencyMatrix[theRow][theColumn];
+        final boolean oldValue = myAdjacencyMatrix[theRow][theColumn];
         myAdjacencyMatrix[theRow][theColumn] = theValue;
-        myPropertyChangeSupport.firePropertyChange(ModelInterface.ADJACENCY_MATRIX, oldValue, theValue);
+        myPropertyChangeSupport.firePropertyChange(ModelInterface.ADJACENCY_MATRIX,
+                oldValue, theValue);
     }
 
     @Override
-    public void addPropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener) {
+    public void addPropertyChangeListener(final String thePropertyName,
+                                          final PropertyChangeListener theListener) {
         myPropertyChangeSupport.addPropertyChangeListener(thePropertyName, theListener);
     }
 
@@ -116,7 +119,8 @@ public class Model implements ModelInterface {
     }
 
     @Override
-    public void removePropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener) {
+    public void removePropertyChangeListener(final String thePropertyName,
+                                             final PropertyChangeListener theListener) {
         myPropertyChangeSupport.removePropertyChangeListener(thePropertyName, theListener);
     }
 
@@ -131,7 +135,8 @@ public class Model implements ModelInterface {
      * @param theColumn the column.
      * @param theValue the value to set.
      */
-    public void setSymmetricalVertice(final int theRow, final int theColumn, final boolean theValue) {
+    public void setSymmetricalVertice(final int theRow, final int theColumn,
+                                      final boolean theValue) {
         //SonarLint is screaming about this,
         //but the swapped parameters are so that they're mirrored on the diagonal.
         setVertice(theRow, theColumn, theValue);
@@ -139,15 +144,15 @@ public class Model implements ModelInterface {
     }
 
     /**
-     * Sets up a new game. Sets player position to 0, and sets the appropriate vertex values in the
-     * adjacency matrix.
+     * Sets up a new game. Sets player position to 0,
+     * and sets the appropriate vertex values in the adjacency matrix.
      */
     public void setUpNewGame() {
         this.setPlayerPosition(0);
-        boolean[][] old = myAdjacencyMatrix;
+        final boolean[][] old = myAdjacencyMatrix;
         myAdjacencyMatrix = new boolean[END_NODE + 1][END_NODE + 1];
-        for (int i = 0; i < END_NODE + 1; i++){
-            if ((i+1)%ROW_LENGTH != 0) {
+        for (int i = 0; i < END_NODE + 1; i++) {
+            if ((i + 1) % ROW_LENGTH != 0) {
                 myAdjacencyMatrix[i][i + 1] = true;
                 myAdjacencyMatrix[i + 1][i] = true;
             }
@@ -156,7 +161,8 @@ public class Model implements ModelInterface {
                 myAdjacencyMatrix[i + ROW_LENGTH][i] = true;
             }
         }
-        myPropertyChangeSupport.firePropertyChange(ModelInterface.ADJACENCY_MATRIX, old, myAdjacencyMatrix);
+        myPropertyChangeSupport.firePropertyChange(ModelInterface.ADJACENCY_MATRIX,
+                old, myAdjacencyMatrix);
     }
 
 

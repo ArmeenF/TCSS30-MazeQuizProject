@@ -3,7 +3,7 @@ package controller;
 import java.util.Map;
 
 /**
- * An interface for the question class, which holds a question with a potential answer
+ * An interface for the question class, which holds a question with a potential answer.
  * @author Joseph Graves
  * @version Fall 2021
  */

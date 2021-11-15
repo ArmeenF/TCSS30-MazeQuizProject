@@ -2,12 +2,19 @@ package controller;
 
 import model.Model;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -24,6 +31,31 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public static final TriviaDeck QUESTION_DECK = () ->
             Question.createQuestion("True", "True", "False");
+
+    /**
+     * The height of the controller panel.
+     */
+    public static final int CONTROLLER_HEIGHT = 700;
+
+    /**
+     * The width of the controller panel.
+     */
+    public static final int CONTROLLER_WIDTH = 300;
+
+    /**
+     * The font size of the Question label.
+     */
+    public static final int QUESTION_FONT_SIZE = 24;
+
+    /**
+     * The number of rows in the movement button grid.
+     */
+    public static final int MOVEMENT_ROWS = 2;
+
+    /**
+     * The number of columns in the movement button grid.
+     */
+    public static final int MOVEMENT_COLS = 3;
 
     /**
      * The label used to display a question.
@@ -86,13 +118,13 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * Constructs a controller panel with controls for the user.
      * @param theModel a reference to the maze model.
      */
-    public Controller(Model theModel) {
+    public Controller(final Model theModel) {
         myModel = theModel;
         this.add(createQuestionBox());
         this.add(createMovementGrid());
         setUpDirectionListeners();
         this.setBackground(Color.gray);
-        this.setSize(300, 700);
+        this.setSize(CONTROLLER_WIDTH, CONTROLLER_HEIGHT);
         this.setVisible(true);
         myModel.addPropertyChangeListener(this);
     }
@@ -103,12 +135,13 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     private Box createQuestionBox() {
         myQuestionLabel = new JLabel("", SwingConstants.CENTER);
-        myQuestionLabel.setFont(new Font("Serif", Font.CENTER_BASELINE, 24));
+        myQuestionLabel.setFont(new Font("Serif", Font.BOLD,
+                QUESTION_FONT_SIZE));
         myAnswerButtonOne = new JButton("");
         myAnswerButtonTwo = new JButton("");
         myAnswerButtonThree = new JButton("");
         myAnswerButtonFour = new JButton("");
-        Box box = Box.createVerticalBox();
+        final Box box = Box.createVerticalBox();
         box.add(myQuestionLabel);
         box.add(myAnswerButtonOne);
         box.add(myAnswerButtonTwo);
@@ -127,18 +160,18 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myDownButton = new JButton("↓");
         myLeftButton = new JButton("←");
         myRightButton = new JButton("→");
-        JPanel movementPanel = new JPanel(new GridLayout(2,3));
-        JPanel blank1 = new JPanel();
+        final JPanel movementPanel = new JPanel(new GridLayout(MOVEMENT_ROWS,
+                                                               MOVEMENT_COLS));
+        final JPanel blank1 = new JPanel();
         blank1.setBackground(Color.gray);
         movementPanel.add(blank1);
         movementPanel.add(myUpButton);
-        JPanel blank2 = new JPanel();
+        final JPanel blank2 = new JPanel();
         blank2.setBackground(Color.gray);
         movementPanel.add(blank2);
         movementPanel.add(myLeftButton);
         movementPanel.add(myDownButton);
         movementPanel.add(myRightButton);
-        movementPanel.setSize(150,100);
         checkMovementButtonValidity();
         return movementPanel;
     }
@@ -160,11 +193,11 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theDirection The direction of the movement button.
      */
     private void queueAnswerButtons(final Direction theDirection) {
-        Question question = QUESTION_DECK.getQuestion();
+        final Question question = QUESTION_DECK.getQuestion();
         myQuestionLabel.setText(question.getQuestionString());
-        int offset = getOffset(theDirection);
-        java.util.List<Map.Entry<String, Boolean>> answerList = new ArrayList<>(question.getAnswerMap().
-                entrySet());
+        final int offset = getOffset(theDirection);
+        final List<Map.Entry<String, Boolean>> answerList
+                = new ArrayList<>(question.getAnswerMap().entrySet());
         clearAnswerButtonText();
         setAnswerButtonEnabled(true);
         Collections.shuffle(answerList);
@@ -178,7 +211,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
             answer = answerList.get(2);
             setAnswerHandler(myAnswerButtonThree, answer.getKey(), answer.getValue(), offset);
         }
-        if (answerList.size() > 3) {
+        if (answerList.size() > 3) { //Not magic, can't use loop for this.
             answer = answerList.get(3);
             setAnswerHandler(myAnswerButtonFour, answer.getKey(), answer.getValue(), offset);
         }
@@ -191,7 +224,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @return the offset for that direction.
      */
     private int getOffset(final Direction theDirection) {
-        return switch(theDirection) {
+        return switch (theDirection) {
             case UP -> -Model.ROW_LENGTH;
             case DOWN -> Model.ROW_LENGTH;
             case LEFT -> -1;
@@ -244,7 +277,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     private void disableVertice(final int theOffset) {
         myModel.setSymmetricalVertice(myModel.getPlayerPosition(),
-                myModel.getPlayerPosition()+theOffset, false);
+                myModel.getPlayerPosition() + theOffset, false);
     }
 
     /**
@@ -269,7 +302,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Removes all the action listeners current on a JButton
+     * Removes all the action listeners current on a JButton.
      * @param theButton the JButton to remove listeners from.
      */
     private void removeAnswerButtonListener(final JButton theButton) {
@@ -299,21 +332,21 @@ public class Controller extends JPanel implements PropertyChangeListener {
     /**
      * Checks the validity of a movement option. If not valid, disable.
      */
-    private void checkMovementButtonValidity(){
-        boolean[][] matrix = myModel.getAdjacencyMatrix();
-        int playerPosition = myModel.getPlayerPosition();
+    private void checkMovementButtonValidity() {
+        final boolean[][] matrix = myModel.getAdjacencyMatrix();
+        final int playerPosition = myModel.getPlayerPosition();
         myLeftButton.setEnabled(playerPosition - 1 >= 0
                 && matrix[playerPosition][playerPosition - 1]);
         myUpButton.setEnabled(playerPosition - Model.ROW_LENGTH >= 0
                 && matrix[playerPosition][playerPosition - Model.ROW_LENGTH]);
         myDownButton.setEnabled(playerPosition + Model.ROW_LENGTH <= Model.END_NODE
-                && matrix[playerPosition][playerPosition + 4]);
+                && matrix[playerPosition][playerPosition + Model.ROW_LENGTH]);
         myRightButton.setEnabled(playerPosition + 1 <= Model.END_NODE
                 && matrix[playerPosition][playerPosition + 1]);
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent theEvent) {
         checkMovementButtonValidity();
     }
 }

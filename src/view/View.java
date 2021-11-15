@@ -3,8 +3,13 @@ package view;
 import model.Model;
 import model.ModelInterface;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -25,7 +30,7 @@ public class View extends JPanel implements PropertyChangeListener {
     /**
      * The squares representing each node in the graph.
      */
-    private JButton[] myNodes = new JButton[Model.END_NODE + 1];
+    private final JButton[] myNodes = new JButton[Model.END_NODE + 1];
 
     /**
      * The player's current position.
@@ -59,16 +64,18 @@ public class View extends JPanel implements PropertyChangeListener {
     /**
      * Creates and shows the view panel.
      */
-    private void createAndShowPanel(){
-        this.setLayout(new GridLayout(7, 8));
+    private void createAndShowPanel() {
+        final int rows = 7;
+        final int columns = 8;
+        this.setLayout(new GridLayout(rows, columns));
         Arrays.setAll(myNodes, n -> new JButton(""));
-        createLeftRightRow(0);
+        createLeftRightRow(0); // Model.ROW_LENGTH * 0
         createUpDownRow();
-        createLeftRightRow(4);
+        createLeftRightRow(Model.ROW_LENGTH); // Model.ROW_LENGTH * 1
         createUpDownRow();
-        createLeftRightRow(8);
+        createLeftRightRow(Model.ROW_LENGTH * 2);
         createUpDownRow();
-        createLeftRightRow(12);
+        createLeftRightRow(Model.ROW_LENGTH * 3); //Not magic.
         this.setBackground(Color.GRAY);
         this.setVisible(true);
     }
@@ -77,15 +84,15 @@ public class View extends JPanel implements PropertyChangeListener {
      * Creates a row entirely of up-down arrows and blank spaces.
      */
     private void createUpDownRow() {
-        String upDownArrow = "↕";
-        String blankMessage = "Blank";
-        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        final String upDownArrow = "↕";
+        final String blankMessage = "Blank";
+        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
         this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
         this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
         this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow,SwingConstants.CENTER));
+        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
     }
 
     /**
@@ -95,12 +102,12 @@ public class View extends JPanel implements PropertyChangeListener {
     private void createLeftRightRow(final int theOffset) {
         final String leftRightArrow = "↔";
         this.add(myNodes[theOffset]);
-        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
+        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
         this.add(myNodes[1 + theOffset]);
-        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
+        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
         this.add(myNodes[2 + theOffset]);
-        this.add(new JLabel(leftRightArrow,SwingConstants.CENTER));
-        this.add(myNodes[3 + theOffset]);
+        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
+        this.add(myNodes[3 + theOffset]); //Not magic, just can't use a loop.
     }
 
     /**
@@ -113,7 +120,7 @@ public class View extends JPanel implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent theEvent) {
+    public void propertyChange(final PropertyChangeEvent theEvent) {
         if (theEvent.getPropertyName().equals(ModelInterface.PLAYER_POSITION)) {
             updatePlayerNode();
             if (myModel.isPlayerAtEnd()) {
@@ -121,10 +128,10 @@ public class View extends JPanel implements PropertyChangeListener {
                 myModel.setUpNewGame();
             }
         }
-        if(theEvent.getPropertyName().equals(ModelInterface.ADJACENCY_MATRIX)
+        if (theEvent.getPropertyName().equals(ModelInterface.ADJACENCY_MATRIX)
             && !myModel.canPlayerWin()) {
-                JOptionPane.showMessageDialog(null, "You lose :(");
-                myModel.setUpNewGame();
+            JOptionPane.showMessageDialog(null, "You lose :(");
+            myModel.setUpNewGame();
         }
     }
 }
