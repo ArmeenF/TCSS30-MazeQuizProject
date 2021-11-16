@@ -29,8 +29,8 @@ public class Controller extends JPanel implements PropertyChangeListener {
     /**
      * The deck of questions being asked in Trivia Maze.
      */
-    public static final TriviaDeck QUESTION_DECK = () ->
-            Question.createQuestion("True", "True", "False");
+    public static final TriviaDeck QUESTION_DECK =
+            new SQLTriviaDeck("trivia.db");
 
     /**
      * The height of the controller panel.
