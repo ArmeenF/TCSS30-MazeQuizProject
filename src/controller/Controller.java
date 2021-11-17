@@ -330,6 +330,16 @@ public class Controller extends JPanel implements PropertyChangeListener {
     }
 
     /**
+     * Updates the model reference.
+     * @param theModel the model to update with.
+     */
+    public void updateModel(final Model theModel) {
+        myModel = theModel;
+        myModel.addPropertyChangeListener(this);
+        checkMovementButtonValidity();
+    }
+
+    /**
      * Checks the validity of a movement option. If not valid, disable.
      */
     private void checkMovementButtonValidity() {

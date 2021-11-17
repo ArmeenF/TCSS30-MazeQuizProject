@@ -2,6 +2,8 @@ package model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -12,7 +14,7 @@ import java.util.List;
  * @author Joseph Graves
  * @version Fall 2021
  */
-public class Model implements ModelInterface {
+public class Model implements ModelInterface, Serializable {
 
     /**
      * The node designated the end, and also the end index of the adjacency array.
@@ -23,6 +25,9 @@ public class Model implements ModelInterface {
      * The row length of the nodes, if they were to be placed in a square array.
      */
     public static final int ROW_LENGTH = 4;
+
+    @Serial
+    private static final long serialVersionUID = -8983653944117407526L;
 
     /**
      * The adjacency matrix which shows valid moves.

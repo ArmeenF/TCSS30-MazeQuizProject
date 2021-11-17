@@ -111,6 +111,16 @@ public class View extends JPanel implements PropertyChangeListener {
     }
 
     /**
+     * Updates the model reference.
+     * @param theModel the model to update with.
+     */
+    public void updateModel(final Model theModel) {
+        myModel = theModel;
+        myModel.addPropertyChangeListener(this);
+        updatePlayerNode();
+    }
+
+    /**
      * Updates the player's current position.
      */
     private void updatePlayerNode() {
@@ -134,4 +144,6 @@ public class View extends JPanel implements PropertyChangeListener {
             myModel.setUpNewGame();
         }
     }
+
+
 }
