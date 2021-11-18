@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -31,6 +30,18 @@ public class View extends JPanel implements PropertyChangeListener {
      * The squares representing each node in the graph.
      */
     private final JButton[] myNodes = new JButton[Model.END_NODE + 1];
+
+    /**
+     * The squares representing each left to right arrow vertex in the graph.
+     */
+    private final VertexLabel[] myLeftRightLabels = new VertexLabel[Model.END_NODE];
+
+    /**
+     * The squares representing each up to down arrow vertex in the graph.
+     */
+    private final VertexLabel[] myUpDownLabels =
+            new VertexLabel[Model.END_NODE + 1 - Model.ROW_LENGTH];
+
 
     /**
      * The player's current position.
@@ -60,39 +71,54 @@ public class View extends JPanel implements PropertyChangeListener {
         updatePlayerNode();
     }
 
-
     /**
      * Creates and shows the view panel.
      */
     private void createAndShowPanel() {
         final int rows = 7;
         final int columns = 8;
+        int counter = 0;
         this.setLayout(new GridLayout(rows, columns));
-        Arrays.setAll(myNodes, n -> new JButton(""));
-        createLeftRightRow(0); // Model.ROW_LENGTH * 0
-        createUpDownRow();
-        createLeftRightRow(Model.ROW_LENGTH); // Model.ROW_LENGTH * 1
-        createUpDownRow();
-        createLeftRightRow(Model.ROW_LENGTH * 2);
-        createUpDownRow();
-        createLeftRightRow(Model.ROW_LENGTH * 3); //Not magic.
+        initArrays();
+        createLeftRightRow(0);
+        createUpDownRow(Model.ROW_LENGTH * counter++); //Ignore IDE
+        createLeftRightRow(Model.ROW_LENGTH * counter);
+        createUpDownRow(Model.ROW_LENGTH * counter++);
+        createLeftRightRow(Model.ROW_LENGTH * counter);
+        createUpDownRow(Model.ROW_LENGTH * counter++);
+        createLeftRightRow(Model.ROW_LENGTH * counter);
         this.setBackground(Color.GRAY);
         this.setVisible(true);
     }
 
     /**
-     * Creates a row entirely of up-down arrows and blank spaces.
+     * Initializes the node and vertex array fields.
      */
-    private void createUpDownRow() {
-        final String upDownArrow = "↕";
-        final String blankMessage = "Blank";
-        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
-        this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
-        this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
-        this.add(new JButton(blankMessage));
-        this.add(new JLabel(upDownArrow, SwingConstants.CENTER));
+    private void initArrays() {
+        final String lockedPath = "X";
+        Arrays.setAll(myNodes, n -> new JButton(""));
+        Arrays.setAll(myLeftRightLabels,
+                n -> myLeftRightLabels[n] = new VertexLabel(n, n + 1,
+                        "↔", lockedPath));
+        Arrays.setAll(myUpDownLabels,
+                n -> myUpDownLabels[n] = new VertexLabel(n, n + Model.ROW_LENGTH,
+                        "↕", lockedPath));
+    }
+
+    /**
+     * Creates a row entirely of up-down arrows and blank spaces.
+     * @param theOffset the offset of the row.
+     */
+    private void createUpDownRow(final int theOffset) {
+        int offset = theOffset;
+        final String blankMessage = "";
+        this.add(myUpDownLabels[offset]);
+        this.add(new JLabel(blankMessage));
+        this.add(myUpDownLabels[++offset]);
+        this.add(new JLabel(blankMessage));
+        this.add(myUpDownLabels[++offset]);
+        this.add(new JLabel(blankMessage));
+        this.add(myUpDownLabels[++offset]);
     }
 
     /**
@@ -100,14 +126,14 @@ public class View extends JPanel implements PropertyChangeListener {
      * @param theOffset The left most node of the row.
      */
     private void createLeftRightRow(final int theOffset) {
-        final String leftRightArrow = "↔";
-        this.add(myNodes[theOffset]);
-        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
-        this.add(myNodes[1 + theOffset]);
-        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
-        this.add(myNodes[2 + theOffset]);
-        this.add(new JLabel(leftRightArrow, SwingConstants.CENTER));
-        this.add(myNodes[3 + theOffset]); //Not magic, just can't use a loop.
+        int offset = theOffset;
+        this.add(myNodes[offset]);
+        this.add(myLeftRightLabels[offset]);
+        this.add(myNodes[++offset]);
+        this.add(myLeftRightLabels[offset]);
+        this.add(myNodes[++offset]);
+        this.add(myLeftRightLabels[offset]);
+        this.add(myNodes[++offset]);
     }
 
     /**
@@ -129,6 +155,19 @@ public class View extends JPanel implements PropertyChangeListener {
         myNodes[myPosition].setText(View.PLAYER_ICON);
     }
 
+    /**
+     * Checks the vertices and applies the appropriate symbol to the vertex label.
+     */
+    private void checkVertices() {
+        final boolean[][] matrix = myModel.getAdjacencyMatrix();
+        for (VertexLabel label : myLeftRightLabels) {
+            label.updateLabel(matrix);
+        }
+        for (VertexLabel label : myUpDownLabels) {
+            label.updateLabel(matrix);
+        }
+    }
+
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
         if (theEvent.getPropertyName().equals(ModelInterface.PLAYER_POSITION)) {
@@ -138,10 +177,12 @@ public class View extends JPanel implements PropertyChangeListener {
                 myModel.setUpNewGame();
             }
         }
-        if (theEvent.getPropertyName().equals(ModelInterface.ADJACENCY_MATRIX)
-            && !myModel.canPlayerWin()) {
-            JOptionPane.showMessageDialog(null, "You lose :(");
-            myModel.setUpNewGame();
+        if (theEvent.getPropertyName().equals(ModelInterface.ADJACENCY_MATRIX)) {
+            if (!myModel.canPlayerWin()) {
+                JOptionPane.showMessageDialog(null, "You lose :(");
+                myModel.setUpNewGame();
+            }
+            checkVertices();
         }
     }
 
