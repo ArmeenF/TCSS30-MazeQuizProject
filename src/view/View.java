@@ -5,10 +5,7 @@ import model.ModelInterface;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -22,14 +19,9 @@ import java.util.Arrays;
 public class View extends JPanel implements PropertyChangeListener {
 
     /**
-     * The icon representing the player.
-     */
-    public static final String PLAYER_ICON = "☻";
-
-    /**
      * The squares representing each node in the graph.
      */
-    private final JButton[] myNodes = new JButton[Model.END_NODE + 1];
+    private final JLabel[] myNodes = new JLabel[Model.END_NODE + 1];
 
     /**
      * The squares representing each left to right arrow vertex in the graph.
@@ -41,7 +33,6 @@ public class View extends JPanel implements PropertyChangeListener {
      */
     private final VertexLabel[] myUpDownLabels =
             new VertexLabel[Model.END_NODE + 1 - Model.ROW_LENGTH];
-
 
     /**
      * The player's current position.
@@ -95,14 +86,17 @@ public class View extends JPanel implements PropertyChangeListener {
      * Initializes the node and vertex array fields.
      */
     private void initArrays() {
-        final String lockedPath = "X";
-        Arrays.setAll(myNodes, n -> new JButton(""));
+        Arrays.setAll(myNodes, n ->
+                new JLabel("", ViewIcons.EMPTY.getImageIcon(), SwingConstants.CENTER));
+
         Arrays.setAll(myLeftRightLabels,
                 n -> myLeftRightLabels[n] = new VertexLabel(n, n + 1,
-                        "↔", lockedPath));
+                        l -> l.setIcon(ViewIcons.VERTEX_LEFT_RIGHT.getImageIcon()),
+                        l -> l.setIcon(ViewIcons.VERTEX_LEFT_RIGHT_DESTROYED.getImageIcon())));
         Arrays.setAll(myUpDownLabels,
                 n -> myUpDownLabels[n] = new VertexLabel(n, n + Model.ROW_LENGTH,
-                        "↕", lockedPath));
+                        l -> l.setIcon(ViewIcons.VERTEX_UP_DOWN.getImageIcon()),
+                        l -> l.setIcon(ViewIcons.VERTEX_UP_DOWN_DESTROYED.getImageIcon())));
     }
 
     /**
@@ -112,12 +106,13 @@ public class View extends JPanel implements PropertyChangeListener {
     private void createUpDownRow(final int theOffset) {
         int offset = theOffset;
         final String blankMessage = "";
+        final ImageIcon blankImage = ViewIcons.BLANK.getImageIcon();
         this.add(myUpDownLabels[offset]);
-        this.add(new JLabel(blankMessage));
+        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
         this.add(myUpDownLabels[++offset]);
-        this.add(new JLabel(blankMessage));
+        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
         this.add(myUpDownLabels[++offset]);
-        this.add(new JLabel(blankMessage));
+        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
         this.add(myUpDownLabels[++offset]);
     }
 
@@ -150,9 +145,9 @@ public class View extends JPanel implements PropertyChangeListener {
      * Updates the player's current position.
      */
     private void updatePlayerNode() {
-        myNodes[myPosition].setText("");
+        myNodes[myPosition].setIcon(ViewIcons.EMPTY.getImageIcon());
         myPosition = myModel.getPlayerPosition();
-        myNodes[myPosition].setText(View.PLAYER_ICON);
+        myNodes[myPosition].setIcon(ViewIcons.PLAYER.getImageIcon());
     }
 
     /**
@@ -181,6 +176,7 @@ public class View extends JPanel implements PropertyChangeListener {
             if (!myModel.canPlayerWin()) {
                 JOptionPane.showMessageDialog(null, "You lose :(");
                 myModel.setUpNewGame();
+                checkVertices();
             }
             checkVertices();
         }
