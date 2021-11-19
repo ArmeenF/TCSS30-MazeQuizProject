@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * A label representing a vertex in a graph.
@@ -18,31 +19,48 @@ public class VertexLabel extends JLabel {
      */
     private final int myColumn;
 
-    /**
-     * The label's text if this vertex is true.
-     */
-    private final String myTrueString;
 
     /**
-     * The label's text if this vertex is false.
+     * A lambda which is used when the vertex is true.
      */
-    private final String myFalseString;
+    private final Consumer<JLabel> myTrueConsumer;
+
+    /**
+     * A lambda which is used when the vertex is false.
+     */
+    private final Consumer<JLabel> myFalseConsumer;
+
+    /**
+     * Creates a label that represents a vertex.
+     * When true, executes theTrueConsumer.
+     * When false, executes theFalseConsumer.
+     * @param theRow the row of the vertex on the adjacency matrix.
+     * @param theColumn the column of the vertex on the adjacency matrix.
+     * @param theTrueConsumer the consumer used when the vertex is false.
+     * @param theFalseConsumer the consumer used when the vertex is true.
+     */
+    public VertexLabel(final int theRow, final int theColumn,
+                       final Consumer<JLabel> theTrueConsumer,
+                       final Consumer<JLabel> theFalseConsumer) {
+        myRow = theRow;
+        myColumn = theColumn;
+        myTrueConsumer = theTrueConsumer;
+        myFalseConsumer = theFalseConsumer;
+        myTrueConsumer.accept(this);
+        setHorizontalAlignment(SwingConstants.CENTER);
+    }
 
     /**
      * Creates a label that represents a vertex.
      * @param theRow the row of the vertex on the adjacency matrix.
      * @param theColumn the column of the vertex on the adjacency matrix.
      * @param theTrueString the text if the vertex is true.
-     * @param theFalseString the tetx if the vertex is false.
+     * @param theFalseString the text if the vertex is false.
      */
     public VertexLabel(final int theRow, final int theColumn,
                        final String theTrueString, final String theFalseString) {
-        myRow = theRow;
-        myColumn = theColumn;
-        myTrueString = theTrueString;
-        myFalseString = theFalseString;
-        setText(theTrueString);
-        setHorizontalAlignment(SwingConstants.CENTER);
+        this(theRow, theColumn,
+                l -> l.setText(theTrueString), l -> l.setText(theFalseString));
     }
 
 
@@ -52,9 +70,9 @@ public class VertexLabel extends JLabel {
      */
     public void updateLabel(final boolean[][] theGraph) {
         if (theGraph[myRow][myColumn]) {
-            setText(myTrueString);
+            myTrueConsumer.accept(this);
         } else {
-            setText(myFalseString);
+            myFalseConsumer.accept(this);
         }
     }
 }
