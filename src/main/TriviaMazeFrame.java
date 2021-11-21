@@ -5,6 +5,9 @@ import model.Model;
 import view.View;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 
 public class TriviaMazeFrame extends JFrame {
@@ -44,6 +47,7 @@ public class TriviaMazeFrame extends JFrame {
         myModel = theModel;
         myView = new View(myModel);
         myController = new Controller(myModel);
+        startUpMessage();
         layoutComponents();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -65,6 +69,34 @@ public class TriviaMazeFrame extends JFrame {
         this.add(pane);
         this.setSize(1000, 700);
         this.setVisible(true);
+    }
+    /**
+     * Shows gameplay instructions during startup.
+     */
+    private void startUpMessage(){
+        JLabel message = new JLabel("Game Play instructions", SwingConstants.CENTER);
+        JButton button = new JButton("Okay");
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(button, BorderLayout.LINE_END);
+        bottomPanel.setBackground(Color.LIGHT_GRAY);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.LIGHT_GRAY);
+        mainPanel.add(message);
+        mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
+        // mainPanel.setPreferredSize(new Dimension(550, 400));
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(mainPanel);
+        frame.setSize(550, 400);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
     }
 
     /**
