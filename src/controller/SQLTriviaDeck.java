@@ -41,6 +41,13 @@ public class SQLTriviaDeck implements TriviaDeck {
     }
 
     /**
+     * Private constructor to make sure a database name is passed in.
+     */
+    private SQLTriviaDeck() {
+        this(null);
+    }
+
+    /**
      * Creates a datasource object from a database name.
      * @param theDatabasename the name of the database.
      * @return a datasource object.
