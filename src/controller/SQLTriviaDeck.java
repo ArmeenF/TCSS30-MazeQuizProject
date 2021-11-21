@@ -20,7 +20,7 @@ public class SQLTriviaDeck implements TriviaDeck {
     /**
      * The list of questions in the deck.
      */
-    private List<Question> myQuestionList = new ArrayList<>();
+    private final List<Question> myQuestionList = new ArrayList<>();
 
     /**
      * Given a database file name, selects the Questions table from it to populate the List.
@@ -61,8 +61,8 @@ public class SQLTriviaDeck implements TriviaDeck {
      */
     private void loadListWithResults(final SQLiteDataSource theDataSource) {
         try (Connection connection = theDataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            final ResultSet result = statement.executeQuery("SELECT * FROM Questions");
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT * FROM Questions")) {
             while (result.next()) {
                 myQuestionList.add(Question.createQuestion(result.getString("Question"),
                         result.getString("Truth"), result.getString("Herring1"),

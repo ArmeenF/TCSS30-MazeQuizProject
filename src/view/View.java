@@ -56,6 +56,7 @@ public class View extends JPanel implements PropertyChangeListener {
      * @param theModel the model.
      */
     public View(final Model theModel) {
+        super();
         myModel = theModel;
         myModel.addPropertyChangeListener(this);
         createAndShowPanel();
@@ -155,10 +156,10 @@ public class View extends JPanel implements PropertyChangeListener {
      */
     private void checkVertices() {
         final boolean[][] matrix = myModel.getAdjacencyMatrix();
-        for (VertexLabel label : myLeftRightLabels) {
+        for (final VertexLabel label : myLeftRightLabels) {
             label.updateLabel(matrix);
         }
-        for (VertexLabel label : myUpDownLabels) {
+        for (final VertexLabel label : myUpDownLabels) {
             label.updateLabel(matrix);
         }
     }

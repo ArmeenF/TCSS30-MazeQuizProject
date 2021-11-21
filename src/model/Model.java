@@ -4,10 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 /**
  * A model representing a trivia maze.
@@ -54,7 +51,7 @@ public class Model implements ModelInterface, Serializable {
 
     @Override
     public boolean[][] getAdjacencyMatrix() {
-        return myAdjacencyMatrix;
+        return Arrays.copyOf(myAdjacencyMatrix, myAdjacencyMatrix.length);
     }
 
     @Override
@@ -152,7 +149,7 @@ public class Model implements ModelInterface, Serializable {
      * Sets up a new game. Sets player position to 0,
      * and sets the appropriate vertex values in the adjacency matrix.
      */
-    public void setUpNewGame() {
+    public final void setUpNewGame() {
         this.setPlayerPosition(0);
         final boolean[][] old = myAdjacencyMatrix;
         myAdjacencyMatrix = new boolean[END_NODE + 1][END_NODE + 1];

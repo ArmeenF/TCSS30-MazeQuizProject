@@ -42,6 +42,7 @@ public class VertexLabel extends JLabel {
     public VertexLabel(final int theRow, final int theColumn,
                        final Consumer<JLabel> theTrueConsumer,
                        final Consumer<JLabel> theFalseConsumer) {
+        super();
         myRow = theRow;
         myColumn = theColumn;
         myTrueConsumer = theTrueConsumer;
@@ -61,6 +62,60 @@ public class VertexLabel extends JLabel {
                        final String theTrueString, final String theFalseString) {
         this(theRow, theColumn,
                 l -> l.setText(theTrueString), l -> l.setText(theFalseString));
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * Creates a null VertexLabel.
+     */
+    private VertexLabel() {
+        this(0, 0, l -> { }, l -> { });
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * @param theText Does nothing.
+     * @param theIcon Does nothing.
+     * @param theHorizontalAlignment Does nothing.
+     */
+    private VertexLabel(final String theText,
+                        final Icon theIcon,
+                        final int theHorizontalAlignment) {
+        this();
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * @param theText Does nothing.
+     * @param theHorizontalAlignment Does nothing.
+     */
+    private VertexLabel(final String theText, final int theHorizontalAlignment) {
+        this();
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * @param theText Does nothing.
+     */
+    private VertexLabel(final String theText) {
+        this();
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * @param theIcon Does nothing.
+     * @param theHorizontalAlignment Does nothing.
+     */
+    private VertexLabel(final Icon theIcon, final int theHorizontalAlignment) {
+        this();
+    }
+
+    /**
+     * Private constructor, to prevent use.
+     * @param theIcon Does nothing.
+     */
+    private VertexLabel(final Icon theIcon) {
+        this();
     }
 
 

@@ -9,7 +9,7 @@ import javax.swing.*;
  * @author Joseph Graves
  * @version Fall 2021
  */
-public class TriviaMazeMain {
+final public class TriviaMazeMain {
 
     /**
      * Private Constructor to prevent instantiation.
@@ -20,9 +20,9 @@ public class TriviaMazeMain {
 
     /**
      * The main entry point for the Trivia Maze program.
-     * @param args Unused.
+     * @param theUnused unused.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] theUnused) {
         SwingUtilities.invokeLater(() -> new TriviaMazeFrame(new Model()));
     }
 }

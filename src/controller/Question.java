@@ -42,7 +42,7 @@ public class Question implements QuestionInterface {
                                           final String ... theIncorrect) {
         final Map<String, Boolean> answerMap = new HashMap<>();
         answerMap.put(theCorrect, true);
-        for (String incorrect : theIncorrect) {
+        for (final String incorrect : theIncorrect) {
             answerMap.put(incorrect, false);
         }
         return new Question(theQuestion, answerMap);

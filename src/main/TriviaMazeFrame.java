@@ -15,7 +15,7 @@ public class TriviaMazeFrame extends JFrame {
 
     private JMenu myFileMenu;
 
-    private JMenu myHelpMenu;
+    private JMenu myHelpMenu; //Consider making this local.
 
     private JMenuItem mySaveGameMenuItem;
 
@@ -40,6 +40,7 @@ public class TriviaMazeFrame extends JFrame {
     }
 
     public TriviaMazeFrame(final Model theModel) {
+        super();
         myModel = theModel;
         myView = new View(myModel);
         myController = new Controller(myModel);
@@ -151,10 +152,10 @@ public class TriviaMazeFrame extends JFrame {
      * Sets up the handlers for the help menu.
      */
     private void setUpHelpMenuHandlers() {
-        String about = "This is Trivia Maze, produced for TCSS360 B," +
+        final String about = "This is Trivia Maze, produced for TCSS360 B," +
                 "made by Armeen Farange and Joseph Graves in 2021.";
         //TODO Add help string.
-        String help = "idk just click some buttons";
+        final String help = "idk just click some buttons";
         myAboutMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, about));
         myHowToPlayMenuItem.addActionListener(e ->

@@ -119,6 +119,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theModel a reference to the maze model.
      */
     public Controller(final Model theModel) {
+        super();
         myModel = theModel;
         this.add(createQuestionBox());
         this.add(createMovementGrid());
