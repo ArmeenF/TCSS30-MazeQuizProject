@@ -25,11 +25,17 @@ public class Question implements QuestionInterface {
      * @param theQuestion a question.
      * @param theAnswers a map of true and false answers.
      */
-    public Question(final String theQuestion, final Map<String, Boolean> theAnswers) {
+    private Question(final String theQuestion, final Map<String, Boolean> theAnswers) {
         myQuestionString = theQuestion;
         myAnswers = theAnswers;
     }
 
+    /**
+     * Unused constructor, defined to prevent instantiation of null Question.
+     */
+    private Question() {
+        this(null, null);
+    }
 
     /**
      * Creates a question given a question, the correct answer, and one or more false answers.
@@ -55,6 +61,6 @@ public class Question implements QuestionInterface {
 
     @Override
     public Map<String, Boolean> getAnswerMap() {
-        return myAnswers;
+        return (Map<String, Boolean>) ((HashMap<String, Boolean>) myAnswers).clone();
     }
 }

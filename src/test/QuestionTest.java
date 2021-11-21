@@ -22,7 +22,8 @@ class QuestionTest {
         Map<String, Boolean> answerMap = new HashMap<>();
         answerMap.put("True", true);
         answerMap.put("False", false);
-        Question question = new Question(tfQuestion, answerMap);
+        Question question =
+                Question.createQuestion(tfQuestion, "True", "False");
         assertEquals(tfQuestion, question.getQuestionString());
     }
 
@@ -35,7 +36,8 @@ class QuestionTest {
         Map<String, Boolean> answerMap = new HashMap<>();
         answerMap.put("True", true);
         answerMap.put("False", false);
-        Question question = new Question(tfQuestion, answerMap);
+        Question question =
+                Question.createQuestion(tfQuestion, "True", "False");
         assertEquals(answerMap, question.getAnswerMap());
     }
 }
