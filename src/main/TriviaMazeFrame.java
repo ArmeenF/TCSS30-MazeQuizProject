@@ -47,8 +47,8 @@ public class TriviaMazeFrame extends JFrame {
         myModel = theModel;
         myView = new View(myModel);
         myController = new Controller(myModel);
-        startUpMessage();
         layoutComponents();
+        startUpMessage();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
@@ -83,7 +83,6 @@ public class TriviaMazeFrame extends JFrame {
         mainPanel.setBackground(Color.LIGHT_GRAY);
         mainPanel.add(message);
         mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
-        // mainPanel.setPreferredSize(new Dimension(550, 400));
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(mainPanel);
