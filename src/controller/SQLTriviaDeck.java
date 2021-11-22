@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A trivia deck designed to take input from an SQLite database.
@@ -21,6 +19,11 @@ public class SQLTriviaDeck implements TriviaDeck {
      * The list of questions in the deck.
      */
     private final List<Question> myQuestionList = new ArrayList<>();
+
+    /**
+     * A deque of already asked questions, to avoid duplicates.
+     */
+    private final Deque<Question> myAskedQuestions = new ArrayDeque<>();
 
     /**
      * Given a database file name, selects the Questions table from it to populate the List.
@@ -83,6 +86,15 @@ public class SQLTriviaDeck implements TriviaDeck {
     @Override
     public Question getQuestion() {
         Collections.shuffle(myQuestionList);
-        return myQuestionList.get(0);
+        Question output = myQuestionList.get(0);
+        while(myAskedQuestions.contains(output)) {
+            Collections.shuffle(myQuestionList);
+            output = myQuestionList.get(0);
+        }
+        myAskedQuestions.add(output);
+        if (myAskedQuestions.size() > myQuestionList.size() / 2) {
+            myAskedQuestions.removeFirst();
+        }
+        return output;
     }
 }
