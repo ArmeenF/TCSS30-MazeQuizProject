@@ -61,6 +61,7 @@ public class View extends JPanel implements PropertyChangeListener {
         myModel.addPropertyChangeListener(this);
         createAndShowPanel();
         updatePlayerNode();
+        myNodes[myNodes.length - 1].setIcon(ViewIcons.GOAL.getImageIcon());
     }
 
     /**
@@ -181,6 +182,7 @@ public class View extends JPanel implements PropertyChangeListener {
             }
             checkVertices();
         }
+        myNodes[myNodes.length - 1].setIcon(ViewIcons.GOAL.getImageIcon());
     }
 
 

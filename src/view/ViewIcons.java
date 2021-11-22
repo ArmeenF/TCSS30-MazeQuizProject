@@ -11,37 +11,42 @@ public enum ViewIcons {
     /**
      * Represents the player.
      */
-    PLAYER("node_p.png"),
+    PLAYER("node_player.gif"),
 
     /**
      * Represents an empty node.
      */
-    EMPTY("node_e.png"),
+    EMPTY("node_empty.png"),
 
     /**
      * Represents a vertex leading left to right, vice versa.
      */
-    VERTEX_LEFT_RIGHT("vertex_lr.png"),
+    VERTEX_LEFT_RIGHT("vertex.png"),
 
     /**
      * Represents a vertex leading left to right, vice versa, destroyed.
      */
-    VERTEX_LEFT_RIGHT_DESTROYED("vertex_lrx.png"),
+    VERTEX_LEFT_RIGHT_DESTROYED("vertex_locked.png"),
 
     /**
      * Represents a vertex leading up to down, vice versa.
      */
-    VERTEX_UP_DOWN("vertex_ud.png"),
+    VERTEX_UP_DOWN("vertex.png"),
 
     /**
      * Represents a vertex leading up to down, vice versa, destroyed.
      */
-    VERTEX_UP_DOWN_DESTROYED("vertex_udx.png"),
+    VERTEX_UP_DOWN_DESTROYED("vertex_locked.png"),
 
     /**
      * Represents an empty space.
      */
-    BLANK("blank.png");
+    BLANK("blank.gif"),
+
+    /**
+     * Represents the ending node.
+     */
+    GOAL("node_end.gif");
 
     /**
      * The image stored for the asset.
