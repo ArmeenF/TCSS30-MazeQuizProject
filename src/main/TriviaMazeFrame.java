@@ -47,8 +47,6 @@ public class TriviaMazeFrame extends JFrame {
             "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> " +
             "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
 
-     private Font font = new Font("Courier", Font.BOLD,20);
-
     private TriviaMazeFrame() {
         //Does nothing..
     }
@@ -86,7 +84,6 @@ public class TriviaMazeFrame extends JFrame {
      */
     private void startUpMessage(){
         JLabel message = new JLabel(GPI);
-        message.setFont(font);
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
         JButton button = new JButton("Okay");
