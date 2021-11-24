@@ -32,6 +32,8 @@ public class TriviaMazeFrame extends JFrame {
 
     private JMenuItem myHowToPlayMenuItem;
 
+    private JMenuItem myCheatMenuItem;
+
     private Model myModel;
 
     private View myView;
@@ -133,8 +135,10 @@ public class TriviaMazeFrame extends JFrame {
         myHelpMenu = new JMenu("Help");
         myAboutMenuItem = new JMenuItem("About");
         myHowToPlayMenuItem = new JMenuItem("Game Play instructions");
+        myCheatMenuItem = new JMenuItem("Cheats");
         myHelpMenu.add(myAboutMenuItem);
         myHelpMenu.add(myHowToPlayMenuItem);
+        myHelpMenu.add(myCheatMenuItem);
         myMenuBar.add(myFileMenu);
         myMenuBar.add(myHelpMenu);
     }
@@ -201,11 +205,16 @@ public class TriviaMazeFrame extends JFrame {
     private void setUpHelpMenuHandlers() {
         final String about = "This is Trivia Maze, produced for TCSS360 B," +
                 "made by Armeen Farange and Joseph Graves in 2021.";
-        //TODO Add help string.
-        //final String help = "idk just click some buttons";
+        final JLabel cheats = new JLabel("<html><ul>" +
+                "<li>Cheat 1</li>" +
+                "<li>Cheat 2</li>" +
+                "<li>Cheat 3</li>" +
+                "</ul><html>");
         myAboutMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, about));
         myHowToPlayMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, GPI));
+        myCheatMenuItem.addActionListener(e ->
+                JOptionPane.showMessageDialog(null, cheats));
     }
 }
