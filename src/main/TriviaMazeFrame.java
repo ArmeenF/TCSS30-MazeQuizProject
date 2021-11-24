@@ -38,6 +38,17 @@ public class TriviaMazeFrame extends JFrame {
 
     private Controller myController;
 
+     final String GPI = "<html>We'd like to welcome you to our trivia maze game! The objective<br>" +
+            " is to get from the starting point to the finishing point. You may<br>" +
+            " choose the direction to go in by using the directional arrows. After<br> " +
+            "you've decided on a direction, you'll be asked a trivia question. If you<br>" +
+            " answer right, you will go in the intended direction; if you answer incorrectly,<br> " +
+            "the chosen direction will be locked, and you will have to choose another direction.<br> " +
+            "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> " +
+            "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
+
+     private Font font = new Font("Courier", Font.BOLD,20);
+
     private TriviaMazeFrame() {
         //Does nothing..
     }
@@ -74,7 +85,10 @@ public class TriviaMazeFrame extends JFrame {
      * Shows gameplay instructions during startup.
      */
     private void startUpMessage(){
-        JLabel message = new JLabel("Game Play instructions", SwingConstants.CENTER);
+        JLabel message = new JLabel(GPI);
+        message.setFont(font);
+        message.setHorizontalAlignment(SwingConstants.CENTER);
+        message.setVerticalAlignment(SwingConstants.CENTER);
         JButton button = new JButton("Okay");
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(button, BorderLayout.LINE_END);
@@ -86,7 +100,9 @@ public class TriviaMazeFrame extends JFrame {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(mainPanel);
-        frame.setSize(550, 400);
+        frame.setSize(600, 450);
+        frame.setLayout(new GridLayout());
+        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
@@ -189,10 +205,10 @@ public class TriviaMazeFrame extends JFrame {
         final String about = "This is Trivia Maze, produced for TCSS360 B," +
                 "made by Armeen Farange and Joseph Graves in 2021.";
         //TODO Add help string.
-        final String help = "idk just click some buttons";
+        //final String help = "idk just click some buttons";
         myAboutMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, about));
         myHowToPlayMenuItem.addActionListener(e ->
-                JOptionPane.showMessageDialog(null, help));
+                JOptionPane.showMessageDialog(null, GPI));
     }
 }
