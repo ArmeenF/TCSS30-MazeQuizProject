@@ -9,7 +9,7 @@ import javax.swing.*;
  * @author Joseph Graves
  * @version Fall 2021
  */
-final public class TriviaMazeMain {
+public final class TriviaMazeMain {
 
     /**
      * Private Constructor to prevent instantiation.

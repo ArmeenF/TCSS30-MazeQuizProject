@@ -141,6 +141,7 @@ public class View extends JPanel implements PropertyChangeListener {
         myModel = theModel;
         myModel.addPropertyChangeListener(this);
         updatePlayerNode();
+        checkVertices();
     }
 
     /**

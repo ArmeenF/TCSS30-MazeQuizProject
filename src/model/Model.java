@@ -39,13 +39,13 @@ public class Model implements ModelInterface, Serializable {
     /**
      * Property change support to help facilitate an MVC design.
      */
-    private final PropertyChangeSupport myPropertyChangeSupport;
+    private final PropertyChangeSupport myPropertyChangeSupport
+            = new PropertyChangeSupport(this);
 
     /**
      * Create a model of a trivia maze.
      */
     public Model() {
-        myPropertyChangeSupport = new PropertyChangeSupport(this);
         setUpNewGame();
     }
 

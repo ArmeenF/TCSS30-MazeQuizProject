@@ -142,7 +142,9 @@ public class TriviaMazeFrame extends JFrame {
     private void saveGame() {
         try (FileOutputStream file = new FileOutputStream(SAVE_FILE);
              ObjectOutputStream output = new ObjectOutputStream(file)) {
+            myModel.removePropertyChangeListener(myView);
             output.writeObject(myModel);
+            myModel.addPropertyChangeListener(myView);
         } catch (final IOException exception) {
             showError(exception);
         }
@@ -177,6 +179,7 @@ public class TriviaMazeFrame extends JFrame {
     private void showError(final Exception theException) {
         JOptionPane.showMessageDialog(null, theException.getMessage(),
                 theException.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+        theException.printStackTrace();
     }
 
     /**
