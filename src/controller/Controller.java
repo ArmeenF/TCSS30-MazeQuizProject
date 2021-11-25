@@ -1,6 +1,7 @@
 package controller;
 
 import model.Model;
+import view.GameSound;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -194,6 +195,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theDirection The direction of the movement button.
      */
     private void queueAnswerButtons(final Direction theDirection) {
+        GameSound.playSound("movement_queue.wav", false);
         final Question question = QUESTION_DECK.getQuestion();
         myQuestionLabel.setText(question.getQuestionString());
         final int offset = getOffset(theDirection);
@@ -259,6 +261,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theOffset the directional offset.
      */
     private void trueAnswerHandler(final int theOffset) {
+        GameSound.playSound("correct.wav", false);
         myModel.setPlayerPosition(myModel.getPlayerPosition() + theOffset);
         disableAnswerButtons();
     }
@@ -268,6 +271,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theOffset the directional offset.
      */
     private void falseAnswerHandler(final int theOffset) {
+        GameSound.playSound("lock_vertex.wav", false);
         disableVertice(theOffset);
         disableAnswerButtons();
     }
