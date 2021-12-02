@@ -5,6 +5,7 @@ import model.Model;
 import view.View;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,15 @@ import java.io.*;
 public class TriviaMazeFrame extends JFrame {
 
     public static final String SAVE_FILE = "save.ser";
+
+    public static final String GAMEPLAY_INSTRUCTIONS = "<html>We'd like to welcome you to our trivia maze game! The objective<br>" +
+            " is to get from the starting point to the finishing point. You may<br>" +
+            " choose the direction to go in by using the directional arrows. After<br> " +
+            "you've decided on a direction, you'll be asked a trivia question. If you<br>" +
+            " answer right, you will go in the intended direction; if you answer incorrectly,<br> " +
+            "the chosen direction will be locked, and you will have to choose another direction.<br> " +
+            "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> " +
+            "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
 
     private JMenuBar myMenuBar;
 
@@ -40,14 +50,7 @@ public class TriviaMazeFrame extends JFrame {
 
     private Controller myController;
 
-     final String GPI = "<html>We'd like to welcome you to our trivia maze game! The objective<br>" +
-            " is to get from the starting point to the finishing point. You may<br>" +
-            " choose the direction to go in by using the directional arrows. After<br> " +
-            "you've decided on a direction, you'll be asked a trivia question. If you<br>" +
-            " answer right, you will go in the intended direction; if you answer incorrectly,<br> " +
-            "the chosen direction will be locked, and you will have to choose another direction.<br> " +
-            "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> " +
-            "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
+
 
     private TriviaMazeFrame() {
         //Does nothing..
@@ -74,18 +77,23 @@ public class TriviaMazeFrame extends JFrame {
         setUpHelpMenu();
         setUpHelpMenuHandlers();
         this.setJMenuBar(myMenuBar);
-        final JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+
+        setBounds(100, 100, 1200, 950);
+        JPanel pane = new JPanel();
+        setContentPane(pane);
+        pane.setLayout(null);
+        myView.setBounds(0, 0, 800, 900);
         pane.add(myView);
+        myController.setBounds(800, 0, 400, 900);
         pane.add(myController);
-        this.add(pane);
-        this.setSize(1000, 700);
         this.setVisible(true);
     }
+
     /**
      * Shows gameplay instructions during startup.
      */
     private void startUpMessage(){
-        JLabel message = new JLabel(GPI);
+        JLabel message = new JLabel(GAMEPLAY_INSTRUCTIONS);
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
         JButton button = new JButton("Okay");
@@ -97,7 +105,7 @@ public class TriviaMazeFrame extends JFrame {
         mainPanel.add(message);
         mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.getContentPane().add(mainPanel);
         frame.setSize(600, 450);
         frame.setLayout(new GridLayout());
@@ -213,7 +221,7 @@ public class TriviaMazeFrame extends JFrame {
         myAboutMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, about));
         myHowToPlayMenuItem.addActionListener(e ->
-                JOptionPane.showMessageDialog(null, GPI));
+                JOptionPane.showMessageDialog(null, GAMEPLAY_INSTRUCTIONS));
         myCheatMenuItem.addActionListener(e ->
                 JOptionPane.showMessageDialog(null, cheats));
     }

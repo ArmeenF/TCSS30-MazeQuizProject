@@ -122,11 +122,11 @@ public class Controller extends JPanel implements PropertyChangeListener {
     public Controller(final Model theModel) {
         super();
         myModel = theModel;
-        this.add(createQuestionBox());
+        setLayout(null);
+        createQuestionBox();
         this.add(createMovementGrid());
         setUpDirectionListeners();
         this.setBackground(Color.gray);
-        this.setSize(CONTROLLER_WIDTH, CONTROLLER_HEIGHT);
         this.setVisible(true);
         myModel.addPropertyChangeListener(this);
     }
@@ -135,22 +135,25 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * Creates the question box.
      * @return the question box.
      */
-    private Box createQuestionBox() {
+    private void createQuestionBox() {
         myQuestionLabel = new JLabel("", SwingConstants.CENTER);
         myQuestionLabel.setFont(new Font("Serif", Font.BOLD,
                 QUESTION_FONT_SIZE));
+        myQuestionLabel.setBounds(10, 11, 357, 213);
         myAnswerButtonOne = new JButton("");
         myAnswerButtonTwo = new JButton("");
         myAnswerButtonThree = new JButton("");
         myAnswerButtonFour = new JButton("");
-        final Box box = Box.createVerticalBox();
-        box.add(myQuestionLabel);
-        box.add(myAnswerButtonOne);
-        box.add(myAnswerButtonTwo);
-        box.add(myAnswerButtonThree);
-        box.add(myAnswerButtonFour);
+        myAnswerButtonOne.setBounds(10, 235, 357, 23);
+        myAnswerButtonTwo.setBounds(10, 260, 357, 23);
+        myAnswerButtonThree.setBounds(10, 285, 357, 23);
+        myAnswerButtonFour.setBounds(10, 310, 357, 23);
+        add(myQuestionLabel);
+        add(myAnswerButtonOne);
+        add(myAnswerButtonTwo);
+        add(myAnswerButtonThree);
+        add(myAnswerButtonFour);
         this.setAnswerButtonEnabled(false);
-        return box;
     }
 
     /**
@@ -164,6 +167,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myRightButton = new JButton("→");
         final JPanel movementPanel = new JPanel(new GridLayout(MOVEMENT_ROWS,
                                                                MOVEMENT_COLS));
+        movementPanel.setBounds(90, 540, 192, 128);
         final JPanel blank1 = new JPanel();
         blank1.setBackground(Color.gray);
         movementPanel.add(blank1);
@@ -197,7 +201,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     private void queueAnswerButtons(final Direction theDirection) {
         GameSound.playSound("movement_queue.wav", false);
         final Question question = QUESTION_DECK.getQuestion();
-        myQuestionLabel.setText(question.getQuestionString());
+        setQuestionText(question.getQuestionString());
         final int offset = getOffset(theDirection);
         final List<Map.Entry<String, Boolean>> answerList
                 = new ArrayList<>(question.getAnswerMap().entrySet());
@@ -219,6 +223,18 @@ public class Controller extends JPanel implements PropertyChangeListener {
             setAnswerHandler(myAnswerButtonFour, answer.getKey(), answer.getValue(), offset);
         }
         disableBlankAnswerButtons();
+        disableMovement();
+    }
+
+    private void disableMovement() {
+        myUpButton.setEnabled(false);
+        myDownButton.setEnabled(false);
+        myLeftButton.setEnabled(false);
+        myRightButton.setEnabled(false);
+    }
+
+    private void setQuestionText(String theQuestionString) {
+        myQuestionLabel.setText("<html>" + theQuestionString + "</html>");
     }
 
     /**
