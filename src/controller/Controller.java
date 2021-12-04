@@ -3,11 +3,7 @@ package controller;
 import model.Model;
 import view.GameSound;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -133,7 +129,6 @@ public class Controller extends JPanel implements PropertyChangeListener {
 
     /**
      * Creates the question box.
-     * @return the question box.
      */
     private void createQuestionBox() {
         myQuestionLabel = new JLabel("", SwingConstants.CENTER);
@@ -161,10 +156,10 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @return a movement box.
      */
     private JPanel createMovementGrid() {
-        myUpButton = new JButton("↑");
-        myDownButton = new JButton("↓");
-        myLeftButton = new JButton("←");
-        myRightButton = new JButton("→");
+        myUpButton = new JButton("", new ImageIcon("up.png"));
+        myDownButton = new JButton("", new ImageIcon("down.png"));
+        myLeftButton = new JButton("", new ImageIcon("left.png"));
+        myRightButton = new JButton("", new ImageIcon("right.png"));
         final JPanel movementPanel = new JPanel(new GridLayout(MOVEMENT_ROWS,
                                                                MOVEMENT_COLS));
         movementPanel.setBounds(90, 540, 192, 128);
@@ -199,6 +194,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theDirection The direction of the movement button.
      */
     private void queueAnswerButtons(final Direction theDirection) {
+        disableMovement();
         GameSound.playSound("movement_queue.wav", false);
         final Question question = QUESTION_DECK.getQuestion();
         setQuestionText(question.getQuestionString());
@@ -208,22 +204,30 @@ public class Controller extends JPanel implements PropertyChangeListener {
         clearAnswerButtonText();
         setAnswerButtonEnabled(true);
         Collections.shuffle(answerList);
-        Map.Entry<String, Boolean> answer = answerList.get(0);
-        setAnswerHandler(myAnswerButtonOne, answer.getKey(), answer.getValue(), offset);
-        if (answerList.size() > 1) {
-            answer = answerList.get(1);
-            setAnswerHandler(myAnswerButtonTwo, answer.getKey(), answer.getValue(), offset);
-        }
-        if (answerList.size() > 2) {
-            answer = answerList.get(2);
-            setAnswerHandler(myAnswerButtonThree, answer.getKey(), answer.getValue(), offset);
-        }
-        if (answerList.size() > 3) { //Not magic, can't use loop for this.
-            answer = answerList.get(3);
-            setAnswerHandler(myAnswerButtonFour, answer.getKey(), answer.getValue(), offset);
-        }
+        setAnswerHandlersFromList(answerList, offset);
         disableBlankAnswerButtons();
-        disableMovement();
+    }
+
+    private void setAnswerHandlersFromList(final List<Map.Entry<String, Boolean>> theList,
+                                           final int theOffset) {
+        Map.Entry<String, Boolean> answer = theList.get(0);
+        setAnswerHandler(myAnswerButtonOne, answer.getKey(),
+                answer.getValue(), theOffset);
+        if (theList.size() > 1) {
+            answer = theList.get(1);
+            setAnswerHandler(myAnswerButtonTwo, answer.getKey(),
+                    answer.getValue(), theOffset);
+        }
+        if (theList.size() > 2) {
+            answer = theList.get(2);
+            setAnswerHandler(myAnswerButtonThree, answer.getKey(),
+                    answer.getValue(), theOffset);
+        }
+        if (theList.size() > 3) { //Not magic, can't use loop for this.
+            answer = theList.get(3);
+            setAnswerHandler(myAnswerButtonFour, answer.getKey(),
+                    answer.getValue(), theOffset);
+        }
     }
 
     private void disableMovement() {

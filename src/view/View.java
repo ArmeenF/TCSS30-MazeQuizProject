@@ -84,6 +84,17 @@ public class View extends JPanel implements PropertyChangeListener {
         this.setVisible(true);
     }
 
+    private Runnable newGameFix() {
+        return () -> {
+            try {
+                Thread.sleep(15);
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            }
+            myModel.setUpNewGame();
+        };
+    }
+
     /**
      * Initializes the node and vertex array fields.
      */
@@ -176,12 +187,13 @@ public class View extends JPanel implements PropertyChangeListener {
             }
         }
         if (theEvent.getPropertyName().equals(ModelInterface.ADJACENCY_MATRIX)) {
+            checkVertices();
             if (!myModel.canPlayerWin()) {
                 JOptionPane.showMessageDialog(null, "You lose :(");
                 myModel.setUpNewGame();
+                (new Thread(newGameFix())).start();
                 checkVertices();
             }
-            checkVertices();
         }
         myNodes[myNodes.length - 1].setIcon(ViewIcons.GOAL.getImageIcon());
     }
