@@ -1,14 +1,17 @@
 package view;
 
-import model.Model;
-import model.ModelInterface;
-
 import java.awt.Color;
 import java.awt.GridLayout;
-import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import model.Model;
+import model.ModelInterface;
 
 /**
  * A view of the maze model.
@@ -86,9 +89,10 @@ public class View extends JPanel implements PropertyChangeListener {
 
     private Runnable newGameFix() {
         return () -> {
+            final int shortDelay = 15;
             try {
-                Thread.sleep(15);
-            } catch (InterruptedException exception) {
+                Thread.sleep(shortDelay);
+            } catch (final InterruptedException exception) {
                 Thread.currentThread().interrupt();
             }
             myModel.setUpNewGame();

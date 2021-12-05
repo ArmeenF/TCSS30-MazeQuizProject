@@ -1,7 +1,10 @@
 package view;
 
-import javax.swing.*;
 import java.util.function.Consumer;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
 
 /**
  * A label representing a vertex in a graph.

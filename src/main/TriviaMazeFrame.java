@@ -1,61 +1,101 @@
 package main;
 
 import controller.Controller;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import model.Model;
 import view.View;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-
+/**
+ * The main frame shown for the Trivia Maze Game.
+ * @author Armeen Farange
+ * @author Joseph Graves
+ * @version Fall 2021
+ */
 public class TriviaMazeFrame extends JFrame {
 
+    /**
+     * The name of the save file.
+     */
     public static final String SAVE_FILE = "save.ser";
 
-    public static final String GAMEPLAY_INSTRUCTIONS = "<html>We'd like to welcome you to our trivia maze game! The objective<br>" +
-            " is to get from the starting point to the finishing point. You may<br>" +
-            " choose the direction to go in by using the directional arrows. After<br> " +
-            "you've decided on a direction, you'll be asked a trivia question. If you<br>" +
-            " answer right, you will go in the intended direction; if you answer incorrectly,<br> " +
-            "the chosen direction will be locked, and you will have to choose another direction.<br> " +
-            "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> " +
-            "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
+    /**
+     * The width of the main window.
+     */
+    public static final int MAIN_WIDTH = 1200;
 
-    private JMenuBar myMenuBar;
+    /**
+     * The height of the main window.
+     */
+    public static final int MAIN_HEIGHT = 950;
 
-    private JMenu myFileMenu;
+    /**
+     * The width of the view in the main window.
+     */
+    public static final int VIEW_WIDTH = 800;
 
-    private JMenu myHelpMenu; //Consider making this local.
+    /**
+     * The height of the view in the main window.
+     */
+    public static final int VIEW_HEIGHT = 900;
 
-    private JMenuItem mySaveGameMenuItem;
+    /**
+     * The width of the controller in the main window.
+     */
+    public static final int CONTROLLER_WIDTH = 400;
 
-    private JMenuItem myLoadGameMenuItem;
+    /**
+     * The height of the controller in the main window.
+     */
+    public static final int CONTROLLER_HEIGHT = 900;
 
-    private JMenuItem myNewGameMenuItem;
+    /**
+     * Contains how to play information.
+     */
+    private JFrame myHelpFrame;
 
-    private JMenuItem myExitMenuItem;
-
-    private JMenuItem myAboutMenuItem;
-
-    private JMenuItem myHowToPlayMenuItem;
-
-    private JMenuItem myCheatMenuItem;
-
+    /**
+     * A reference to the model.
+     */
     private Model myModel;
 
+    /**
+     * The View panel, displays the view.
+     */
     private View myView;
 
+    /**
+     * The controller panel, allows the player to play.
+     */
     private Controller myController;
 
-
-
+    /**
+     * Private constructor to force passing a model reference.
+     */
     private TriviaMazeFrame() {
         //Does nothing..
     }
 
+    /**
+     * Constructs a new TriviaMazeFrame, given a model.
+     * @param theModel the model for the game.
+     */
     public TriviaMazeFrame(final Model theModel) {
         super();
         myModel = theModel;
@@ -71,20 +111,14 @@ public class TriviaMazeFrame extends JFrame {
      */
     private void layoutComponents() {
         this.setTitle("Joseph & Armeen's Trivia Maze Game");
-        myMenuBar = new JMenuBar();
-        setUpFileMenu();
-        setUpFileMenuHandlers();
-        setUpHelpMenu();
-        setUpHelpMenuHandlers();
-        this.setJMenuBar(myMenuBar);
-
-        setBounds(100, 100, 1200, 950);
-        JPanel pane = new JPanel();
+        setUpMenuBar();
+        setBounds(0, 0, MAIN_WIDTH, MAIN_HEIGHT);
+        final JPanel pane = new JPanel();
         setContentPane(pane);
         pane.setLayout(null);
-        myView.setBounds(0, 0, 800, 900);
+        myView.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
         pane.add(myView);
-        myController.setBounds(800, 0, 400, 900);
+        myController.setBounds(VIEW_WIDTH, 0, CONTROLLER_WIDTH, CONTROLLER_HEIGHT);
         pane.add(myController);
         this.setVisible(true);
     }
@@ -92,73 +126,87 @@ public class TriviaMazeFrame extends JFrame {
     /**
      * Shows gameplay instructions during startup.
      */
-    private void startUpMessage(){
-        JLabel message = new JLabel(GAMEPLAY_INSTRUCTIONS);
+    private void startUpMessage() {
+        final String help = "<html>We'd like to welcome you to our trivia maze game! The objective<br>"
+                + " is to get from the starting point to the finishing point. You may<br>"
+                + " choose the direction to go in by using the directional arrows. After<br> "
+                + "you've decided on a direction, you'll be asked a trivia question. If you<br>"
+                + " answer right, you will go in the intended direction; if you answer incorrectly,<br> "
+                + "the chosen direction will be locked, and you will have to choose another direction.<br> "
+                + "You will lose the game if you do not correctly answer all of the directional trivia questions.<br> "
+                + "Click Help then Gameplay Instructions for additional information. Best of luck!</html>";
+        final JLabel message = new JLabel(help);
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
-        JButton button = new JButton("Okay");
-        JPanel bottomPanel = new JPanel(new BorderLayout());
+        final JButton button = new JButton("Okay");
+        final JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(button, BorderLayout.LINE_END);
         bottomPanel.setBackground(Color.LIGHT_GRAY);
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        final JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.LIGHT_GRAY);
         mainPanel.add(message);
         mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().add(mainPanel);
-        frame.setSize(600, 450);
-        frame.setLayout(new GridLayout());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        myHelpFrame = new JFrame();
+        myHelpFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        myHelpFrame.getContentPane().add(mainPanel);
+        myHelpFrame.setSize(600, 450);
+        myHelpFrame.setLayout(new GridLayout());
+        myHelpFrame.pack();
+        myHelpFrame.setLocationRelativeTo(null);
+        myHelpFrame.setVisible(true);
+        button.addActionListener(e -> myHelpFrame.setVisible(false));
+    }
 
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+    private void setUpMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+        menuBar.add(setUpFileMenu());
+        menuBar.add(setUpHelpMenu());
     }
 
     /**
      * Creates and adds components to the file menu.
+     * @return a file menu.
      */
-    private void setUpFileMenu() {
-        myFileMenu = new JMenu("File");
-        myNewGameMenuItem = new JMenuItem("New Game");
-        mySaveGameMenuItem = new JMenuItem("Save Game");
-        myLoadGameMenuItem = new JMenuItem("Load Game");
-        myExitMenuItem = new JMenuItem("Exit");
-        myFileMenu.add(mySaveGameMenuItem);
-        myFileMenu.add(myLoadGameMenuItem);
-        myFileMenu.add(myNewGameMenuItem);
-        myFileMenu.add(myExitMenuItem);
+    private JMenu setUpFileMenu() {
+        final JMenu fileMenu = new JMenu("File");
+        final JMenuItem newGameMenuItem = new JMenuItem("New Game");
+        newGameMenuItem.addActionListener(e -> myModel.setUpNewGame());
+        final JMenuItem saveGameMenuItem = new JMenuItem("Save Game");
+        saveGameMenuItem.addActionListener(e -> saveGame());
+        final JMenuItem loadGameMenuItem = new JMenuItem("Load Game");
+        loadGameMenuItem.addActionListener(e -> loadGame());
+        final JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(e -> this.dispose());
+        fileMenu.add(saveGameMenuItem);
+        fileMenu.add(loadGameMenuItem);
+        fileMenu.add(newGameMenuItem);
+        fileMenu.add(exitMenuItem);
+        return fileMenu;
     }
 
     /**
      * Creates and adds components to the help menu.
+     * @return a help menu.
      */
-    private void setUpHelpMenu() {
-        myHelpMenu = new JMenu("Help");
-        myAboutMenuItem = new JMenuItem("About");
-        myHowToPlayMenuItem = new JMenuItem("Game Play instructions");
-        myCheatMenuItem = new JMenuItem("Cheats");
-        myHelpMenu.add(myAboutMenuItem);
-        myHelpMenu.add(myHowToPlayMenuItem);
-        myHelpMenu.add(myCheatMenuItem);
-        myMenuBar.add(myFileMenu);
-        myMenuBar.add(myHelpMenu);
-    }
-
-    /**
-     * Sets up the handlers for the file menu.
-     */
-    private void setUpFileMenuHandlers() {
-        myNewGameMenuItem.addActionListener(e -> myModel.setUpNewGame());
-        mySaveGameMenuItem.addActionListener(e -> saveGame());
-        myLoadGameMenuItem.addActionListener(e -> loadGame());
-        myExitMenuItem.addActionListener(e -> this.dispose());
+    private JMenu setUpHelpMenu() {
+        final JMenu helpMenu = new JMenu("Help");
+        final JMenuItem aboutMenuItem = new JMenuItem("About");
+        final JMenuItem howToPlayMenuItem = new JMenuItem("Game Play instructions");
+        final JMenuItem cheatMenuItem = new JMenuItem("Cheats");
+        final String about = "This is Trivia Maze, produced for TCSS360 B,"
+                + "made by Armeen Farange and Joseph Graves in 2021.";
+        final JLabel cheats = new JLabel("<html><ul><li>Cheat 1</li><li>Cheat 2</li>"
+                + "<li>Cheat 3</li></ul><html>"); //TODO This can't just be a JOptionPane..
+        aboutMenuItem.addActionListener(e ->
+                JOptionPane.showMessageDialog(null, about));
+        howToPlayMenuItem.addActionListener(e -> myHelpFrame.setVisible(true));
+        cheatMenuItem.addActionListener(e ->
+                JOptionPane.showMessageDialog(null, cheats));
+        helpMenu.add(aboutMenuItem);
+        helpMenu.add(howToPlayMenuItem);
+        helpMenu.add(cheatMenuItem);
+        return helpMenu;
     }
 
     /**
@@ -205,24 +253,5 @@ public class TriviaMazeFrame extends JFrame {
         JOptionPane.showMessageDialog(null, theException.getMessage(),
                 theException.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
         theException.printStackTrace();
-    }
-
-    /**
-     * Sets up the handlers for the help menu.
-     */
-    private void setUpHelpMenuHandlers() {
-        final String about = "This is Trivia Maze, produced for TCSS360 B," +
-                "made by Armeen Farange and Joseph Graves in 2021.";
-        final JLabel cheats = new JLabel("<html><ul>" +
-                "<li>Cheat 1</li>" +
-                "<li>Cheat 2</li>" +
-                "<li>Cheat 3</li>" +
-                "</ul><html>");
-        myAboutMenuItem.addActionListener(e ->
-                JOptionPane.showMessageDialog(null, about));
-        myHowToPlayMenuItem.addActionListener(e ->
-                JOptionPane.showMessageDialog(null, GAMEPLAY_INSTRUCTIONS));
-        myCheatMenuItem.addActionListener(e ->
-                JOptionPane.showMessageDialog(null, cheats));
     }
 }

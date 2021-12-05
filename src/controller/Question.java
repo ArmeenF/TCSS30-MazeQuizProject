@@ -8,7 +8,7 @@ import java.util.Map;
  * @author Joseph Graves
  * @version Fall 2021
  */
-public class Question implements QuestionInterface {
+public final class Question implements QuestionInterface {
 
     /**
      * The question being asked.

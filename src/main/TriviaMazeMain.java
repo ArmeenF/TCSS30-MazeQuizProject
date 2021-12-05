@@ -1,8 +1,7 @@
 package main;
 
+import javax.swing.SwingUtilities;
 import model.Model;
-
-import javax.swing.*;
 
 /**
  * The main entry point for the Trivia Maze program.

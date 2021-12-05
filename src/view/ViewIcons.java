@@ -1,6 +1,6 @@
 package view;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
  * Image Icon assets for the View to use as graphics.
@@ -21,7 +21,7 @@ public enum ViewIcons {
     /**
      * Represents a vertex leading left to right, vice versa.
      */
-    VERTEX_LEFT_RIGHT("vertex.png"),
+    VERTEX_LEFT_RIGHT("vertex.png"), //Repeating Strings isn't an issue here.
 
     /**
      * Represents a vertex leading left to right, vice versa, destroyed.
