@@ -1,12 +1,15 @@
 package controller;
 
-import org.sqlite.SQLiteDataSource;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import org.sqlite.SQLiteDataSource;
 
 /**
  * A trivia deck designed to take input from an SQLite database.
@@ -57,11 +60,7 @@ public class SQLTriviaDeck implements TriviaDeck {
      */
     private SQLiteDataSource createDatasource(final String theDatabasename) {
         final SQLiteDataSource source = new SQLiteDataSource();
-        try {
-            source.setUrl("jdbc:sqlite:" + theDatabasename);
-        } catch (final Exception exception) { //TODO Ask instructor for exception type.
-            exception.printStackTrace();
-        }
+        source.setUrl("jdbc:sqlite:" + theDatabasename);
         return source;
     }
 
@@ -87,7 +86,7 @@ public class SQLTriviaDeck implements TriviaDeck {
     public Question getQuestion() {
         Collections.shuffle(myQuestionList);
         Question output = myQuestionList.get(0);
-        while(myAskedQuestions.contains(output)) {
+        while (myAskedQuestions.contains(output)) {
             Collections.shuffle(myQuestionList);
             output = myQuestionList.get(0);
         }

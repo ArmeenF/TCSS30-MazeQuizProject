@@ -1,9 +1,5 @@
 package controller;
 
-import model.Model;
-import view.GameSound;
-
-import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -14,6 +10,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import model.Model;
+import view.GameSound;
 
 /**
  * The controller class for Trivia Maze. Allows the user to traverse the maze.
@@ -30,16 +33,6 @@ public class Controller extends JPanel implements PropertyChangeListener {
             new SQLTriviaDeck("trivia.db");
 
     /**
-     * The height of the controller panel.
-     */
-    public static final int CONTROLLER_HEIGHT = 700;
-
-    /**
-     * The width of the controller panel.
-     */
-    public static final int CONTROLLER_WIDTH = 300;
-
-    /**
      * The font size of the Question label.
      */
     public static final int QUESTION_FONT_SIZE = 24;
@@ -53,6 +46,71 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * The number of columns in the movement button grid.
      */
     public static final int MOVEMENT_COLS = 3;
+
+    /**
+     * The width of the answer buttons and question label.
+     */
+    public static final int ANSWER_WIDTH = 357;
+
+    /**
+     * The height of each answer button.
+     */
+    public static final int ANSWER_HEIGHT = 23;
+
+    /**
+     * The x position for the answer buttons and question label.
+     */
+    public static final int ANSWER_X = 10;
+
+    /**
+     * The y position for the first answer button.
+     */
+    public static final int ANSWER_ONE_Y = 235;
+
+    /**
+     * The y position for the second answer button.
+     */
+    public static final int ANSWER_TWO_Y = 260;
+
+    /**
+     * The y position for the third answer button.
+     */
+    public static final int ANSWER_THREE_Y = 285;
+
+    /**
+     * The y position for the fourth answer button.
+     */
+    public static final int ANSWER_FOUR_Y = 310;
+
+    /**
+     * The height of the question label.
+     */
+    public static final int QUESTION_HEIGHT = 213;
+
+    /**
+     * The y position for the question label.
+     */
+    public static final int QUESTION_Y = 11;
+
+    /**
+     * The x position of the movement box.
+     */
+    public static final int MOVEMENT_X = 90;
+
+    /**
+     * The y position of the movement box.
+     */
+    public static final int MOVEMENT_Y = 540;
+
+    /**
+     * The width of the movement box.
+     */
+    public static final int MOVEMENT_WIDTH = 192;
+
+    /**
+     * The height of the movement box.
+     */
+    public static final int MOVEMENT_HEIGHT = 128;
 
     /**
      * The label used to display a question.
@@ -134,15 +192,15 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myQuestionLabel = new JLabel("", SwingConstants.CENTER);
         myQuestionLabel.setFont(new Font("Serif", Font.BOLD,
                 QUESTION_FONT_SIZE));
-        myQuestionLabel.setBounds(10, 11, 357, 213);
+        myQuestionLabel.setBounds(ANSWER_X, QUESTION_Y, ANSWER_WIDTH, QUESTION_HEIGHT);
         myAnswerButtonOne = new JButton("");
         myAnswerButtonTwo = new JButton("");
         myAnswerButtonThree = new JButton("");
         myAnswerButtonFour = new JButton("");
-        myAnswerButtonOne.setBounds(10, 235, 357, 23);
-        myAnswerButtonTwo.setBounds(10, 260, 357, 23);
-        myAnswerButtonThree.setBounds(10, 285, 357, 23);
-        myAnswerButtonFour.setBounds(10, 310, 357, 23);
+        myAnswerButtonOne.setBounds(ANSWER_X, ANSWER_ONE_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
+        myAnswerButtonTwo.setBounds(ANSWER_X, ANSWER_TWO_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
+        myAnswerButtonThree.setBounds(ANSWER_X, ANSWER_THREE_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
+        myAnswerButtonFour.setBounds(ANSWER_X, ANSWER_FOUR_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
         add(myQuestionLabel);
         add(myAnswerButtonOne);
         add(myAnswerButtonTwo);
@@ -162,7 +220,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myRightButton = new JButton("", new ImageIcon("right.png"));
         final JPanel movementPanel = new JPanel(new GridLayout(MOVEMENT_ROWS,
                                                                MOVEMENT_COLS));
-        movementPanel.setBounds(90, 540, 192, 128);
+        movementPanel.setBounds(MOVEMENT_X, MOVEMENT_Y, MOVEMENT_WIDTH, MOVEMENT_HEIGHT);
         final JPanel blank1 = new JPanel();
         blank1.setBackground(Color.gray);
         movementPanel.add(blank1);
@@ -237,7 +295,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myRightButton.setEnabled(false);
     }
 
-    private void setQuestionText(String theQuestionString) {
+    private void setQuestionText(final String theQuestionString) {
         myQuestionLabel.setText("<html>" + theQuestionString + "</html>");
     }
 
