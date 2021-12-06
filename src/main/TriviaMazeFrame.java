@@ -1,6 +1,8 @@
 package main;
 
 import controller.Controller;
+import controller.Question;
+import controller.SQLTriviaDeck;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -12,7 +14,6 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,9 +26,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
-import controller.Question;
-import controller.SQLTriviaDeck;
 import model.Model;
 import view.View;
 
@@ -172,6 +170,9 @@ public class TriviaMazeFrame extends JFrame {
         button.addActionListener(e -> myHelpFrame.setVisible(false));
     }
 
+    /**
+     * Creates the menu bar for this frame.
+     */
     private void setUpMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
@@ -233,12 +234,16 @@ public class TriviaMazeFrame extends JFrame {
         final JButton c2 = new JButton("Unlock All Paths");
         final JButton c3 = new JButton();
         c3.setText("Answer Cheat: " + myController.getAnswerCheat().toString());
+        final JButton c4 = new JButton("Set player position");
         c1.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
         c2.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        c3.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        c4.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
         f2.add(p);
         p.add(c1);
         p.add(c2);
         p.add(c3);
+        p.add(c4);
         p.setLayout(new GridLayout(0, 1));
         f2.setJMenuBar(mb);
         f2.setSize(600, 250); // TODO Magic Numbers
@@ -250,6 +255,7 @@ public class TriviaMazeFrame extends JFrame {
             myController.setMyAnswerCheat(!myController.getAnswerCheat());
             c3.setText("Answer Cheat: " + myController.getAnswerCheat().toString());
         });
+        c4.addActionListener(e -> cheatMenuPlayerPositionSet());
     }
 
     /**
@@ -303,6 +309,25 @@ public class TriviaMazeFrame extends JFrame {
         final int oldPosition = myModel.getPlayerPosition();
         myModel.setUpNewGame();
         myModel.setPlayerPosition(oldPosition);
+    }
+
+    /**
+     * Creates and displays a cheat menu that allows the user to set their position.
+     */
+    private void cheatMenuPlayerPositionSet() {
+        final JFrame frame = new JFrame("Set Player Position");
+        frame.setLayout(new GridLayout(4, 4)); //TODO More magic numbers.
+        for (int i = 0; i < Model.END_NODE + 1; i++) {
+            final JButton button = new JButton(i + "");
+            final int finalI = i;
+            button.addActionListener(e -> myModel.setPlayerPosition(finalI));
+            button.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+            frame.add(button);
+        }
+        frame.setVisible(true);
+        frame.pack();
+        frame.setSize(300, 300);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
