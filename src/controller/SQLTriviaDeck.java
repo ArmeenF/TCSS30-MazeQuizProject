@@ -47,6 +47,14 @@ public class SQLTriviaDeck implements TriviaDeck {
     }
 
     /**
+     * Returns a copy of this deck's question list.
+     * @return a copy of this deck's question list.
+     */
+    public List<Question> getQuestionList() {
+        return new ArrayList<>(myQuestionList);
+    }
+
+    /**
      * Private constructor to make sure a database name is passed in.
      */
     private SQLTriviaDeck() {

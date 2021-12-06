@@ -112,6 +112,8 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public static final int MOVEMENT_HEIGHT = 128;
 
+    private boolean myAnswerCheat = false;
+
     /**
      * The label used to display a question.
      */
@@ -183,6 +185,14 @@ public class Controller extends JPanel implements PropertyChangeListener {
         this.setBackground(Color.gray);
         this.setVisible(true);
         myModel.addPropertyChangeListener(this);
+    }
+
+    public void setMyAnswerCheat(final boolean theTruth) {
+        myAnswerCheat = theTruth;
+    }
+
+    public Boolean getAnswerCheat() {
+        return myAnswerCheat;
     }
 
     /**
@@ -328,6 +338,9 @@ public class Controller extends JPanel implements PropertyChangeListener {
         theButton.setText(theText);
         if (theTruth) {
             theButton.addActionListener(e -> trueAnswerHandler(theOffset));
+            if (myAnswerCheat) {
+                theButton.setText(theButton.getText() + " *");
+            }
         } else {
             theButton.addActionListener(e -> falseAnswerHandler(theOffset));
         }
