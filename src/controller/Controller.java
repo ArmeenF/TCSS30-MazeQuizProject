@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -65,22 +66,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     /**
      * The y position for the first answer button.
      */
-    public static final int ANSWER_ONE_Y = 235;
-
-    /**
-     * The y position for the second answer button.
-     */
-    public static final int ANSWER_TWO_Y = 260;
-
-    /**
-     * The y position for the third answer button.
-     */
-    public static final int ANSWER_THREE_Y = 285;
-
-    /**
-     * The y position for the fourth answer button.
-     */
-    public static final int ANSWER_FOUR_Y = 310;
+    public static final int ANSWER_Y = 235;
 
     /**
      * The height of the question label.
@@ -112,7 +98,10 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public static final int MOVEMENT_HEIGHT = 128;
 
-    private boolean myAnswerCheat = false;
+    /**
+     * Determines whether to mark the correct answer on the answer buttons.
+     */
+    private boolean myAnswerCheat;
 
     /**
      * The label used to display a question.
@@ -122,22 +111,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     /**
      * The first potential answer to a question.
      */
-    private JButton myAnswerButtonOne;
-
-    /**
-     * The second potential answer to a question.
-     */
-    private JButton myAnswerButtonTwo;
-
-    /**
-     * The third potential answer to a question.
-     */
-    private JButton myAnswerButtonThree;
-
-    /**
-     * The fourth potential answer to a question.
-     */
-    private JButton myAnswerButtonFour;
+    private JButton[] myAnswerButtons;
 
     /**
      * A button that moves the player up.
@@ -187,10 +161,20 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myModel.addPropertyChangeListener(this);
     }
 
+    /**
+     * Enables or disables a cheat that shows the correct answer.
+     * True for enable, false otherwise.
+     * @param theTruth True for enable, false otherwise.
+     */
     public void setMyAnswerCheat(final boolean theTruth) {
         myAnswerCheat = theTruth;
     }
 
+    /**
+     * Returns the whether the answer cheat is on.
+     * True for enabled, false otherwise.
+     * @return True for enabled, false otherwise.
+     */
     public Boolean getAnswerCheat() {
         return myAnswerCheat;
     }
@@ -203,20 +187,17 @@ public class Controller extends JPanel implements PropertyChangeListener {
         myQuestionLabel.setFont(new Font("Serif", Font.BOLD,
                 QUESTION_FONT_SIZE));
         myQuestionLabel.setBounds(ANSWER_X, QUESTION_Y, ANSWER_WIDTH, QUESTION_HEIGHT);
-        myAnswerButtonOne = new JButton("");
-        myAnswerButtonTwo = new JButton("");
-        myAnswerButtonThree = new JButton("");
-        myAnswerButtonFour = new JButton("");
-        myAnswerButtonOne.setBounds(ANSWER_X, ANSWER_ONE_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
-        myAnswerButtonTwo.setBounds(ANSWER_X, ANSWER_TWO_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
-        myAnswerButtonThree.setBounds(ANSWER_X, ANSWER_THREE_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
-        myAnswerButtonFour.setBounds(ANSWER_X, ANSWER_FOUR_Y, ANSWER_WIDTH, ANSWER_HEIGHT);
+        final int maxAnswers = 4;
+        myAnswerButtons = new JButton[maxAnswers];
+        Arrays.setAll(myAnswerButtons, n -> new JButton());
+        final int buttonOffset = 25;
+        for (int i = 0; i < myAnswerButtons.length; i++) {
+            myAnswerButtons[i].setBounds(ANSWER_X, ANSWER_Y + i * buttonOffset,
+                    ANSWER_WIDTH, ANSWER_HEIGHT);
+            add(myAnswerButtons[i]);
+        }
         add(myQuestionLabel);
-        add(myAnswerButtonOne);
-        add(myAnswerButtonTwo);
-        add(myAnswerButtonThree);
-        add(myAnswerButtonFour);
-        this.setAnswerButtonEnabled(false);
+        setAnswerButtonEnabled(false);
     }
 
     /**
@@ -278,23 +259,14 @@ public class Controller extends JPanel implements PropertyChangeListener {
 
     private void setAnswerHandlersFromList(final List<Map.Entry<String, Boolean>> theList,
                                            final int theOffset) {
-        Map.Entry<String, Boolean> answer = theList.get(0);
-        setAnswerHandler(myAnswerButtonOne, answer.getKey(),
+        Map.Entry<String, Boolean> answer;
+        for (int i = 0; i < theList.size(); i++) {
+            answer = theList.get(i);
+            if (i >= myAnswerButtons.length) {
+                break;
+            }
+            setAnswerHandler(myAnswerButtons[i], answer.getKey(),
                 answer.getValue(), theOffset);
-        if (theList.size() > 1) {
-            answer = theList.get(1);
-            setAnswerHandler(myAnswerButtonTwo, answer.getKey(),
-                    answer.getValue(), theOffset);
-        }
-        if (theList.size() > 2) {
-            answer = theList.get(2);
-            setAnswerHandler(myAnswerButtonThree, answer.getKey(),
-                    answer.getValue(), theOffset);
-        }
-        if (theList.size() > 3) { //Not magic, can't use loop for this.
-            answer = theList.get(3);
-            setAnswerHandler(myAnswerButtonFour, answer.getKey(),
-                    answer.getValue(), theOffset);
         }
     }
 
@@ -381,20 +353,14 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * @param theValue The boolean value.
      */
     private void setAnswerButtonEnabled(final boolean theValue) {
-        myAnswerButtonOne.setEnabled(theValue);
-        myAnswerButtonTwo.setEnabled(theValue);
-        myAnswerButtonThree.setEnabled(theValue);
-        myAnswerButtonFour.setEnabled(theValue);
+        Arrays.stream(myAnswerButtons).forEach(b -> b.setEnabled(theValue));
     }
 
     /**
      * Clears the text from the answer buttons.
      */
     private void clearAnswerButtonText() {
-        myAnswerButtonOne.setText("");
-        myAnswerButtonTwo.setText("");
-        myAnswerButtonThree.setText("");
-        myAnswerButtonFour.setText("");
+        Arrays.stream(myAnswerButtons).forEach(b -> b.setText(""));
     }
 
     /**
@@ -419,10 +385,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      * Disables any of the four answer buttons that happens to be blank.
      */
     private void disableBlankAnswerButtons() {
-        myAnswerButtonOne.setEnabled(!myAnswerButtonOne.getText().isBlank());
-        myAnswerButtonTwo.setEnabled(!myAnswerButtonTwo.getText().isBlank());
-        myAnswerButtonThree.setEnabled(!myAnswerButtonThree.getText().isBlank());
-        myAnswerButtonFour.setEnabled(!myAnswerButtonFour.getText().isBlank());
+        Arrays.stream(myAnswerButtons).forEach(b -> b.setEnabled(!b.getText().isBlank()));
     }
 
     /**

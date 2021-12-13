@@ -73,20 +73,23 @@ public class View extends JPanel implements PropertyChangeListener {
     private void createAndShowPanel() {
         final int rows = 7;
         final int columns = 8;
-        int counter = 0;
         this.setLayout(new GridLayout(rows, columns));
         initArrays();
-        createLeftRightRow(0);
-        createUpDownRow(Model.ROW_LENGTH * counter++); //Ignore IDE
-        createLeftRightRow(Model.ROW_LENGTH * counter);
-        createUpDownRow(Model.ROW_LENGTH * counter++);
-        createLeftRightRow(Model.ROW_LENGTH * counter);
-        createUpDownRow(Model.ROW_LENGTH * counter++);
-        createLeftRightRow(Model.ROW_LENGTH * counter);
+        final int loopEnd = (Model.END_NODE + 1) / Model.ROW_LENGTH;
+        for (int i = 0; i < loopEnd; i++) {
+            createLeftRightRow(Model.ROW_LENGTH * i);
+            if (i < loopEnd - 1) {
+                createUpDownRow(Model.ROW_LENGTH * i);
+            }
+        }
         this.setBackground(Color.GRAY);
         this.setVisible(true);
     }
 
+    /**
+     * Returns a runnable that fixes a bug in starting a new game while losing.
+     * @return a runnable that fixes a bug in starting a new game while losing.
+     */
     private Runnable newGameFix() {
         return () -> {
             final int shortDelay = 15;
@@ -124,13 +127,13 @@ public class View extends JPanel implements PropertyChangeListener {
         int offset = theOffset;
         final String blankMessage = "";
         final ImageIcon blankImage = ViewIcons.BLANK.getImageIcon();
-        this.add(myUpDownLabels[offset]);
-        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
-        this.add(myUpDownLabels[++offset]);
-        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
-        this.add(myUpDownLabels[++offset]);
-        this.add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
-        this.add(myUpDownLabels[++offset]);
+        final int loopEnd = Model.ROW_LENGTH + theOffset;
+        while (offset != loopEnd) {
+            add(myUpDownLabels[offset++]);
+            if (offset < loopEnd) {
+                add(new JLabel(blankMessage, blankImage, SwingConstants.CENTER));
+            }
+        }
     }
 
     /**
@@ -138,14 +141,14 @@ public class View extends JPanel implements PropertyChangeListener {
      * @param theOffset The left most node of the row.
      */
     private void createLeftRightRow(final int theOffset) {
-        int offset = theOffset;
-        this.add(myNodes[offset]);
-        this.add(myLeftRightLabels[offset]);
-        this.add(myNodes[++offset]);
-        this.add(myLeftRightLabels[offset]);
-        this.add(myNodes[++offset]);
-        this.add(myLeftRightLabels[offset]);
-        this.add(myNodes[++offset]);
+        int offset = theOffset - 1;
+        final int loopEnd = Model.ROW_LENGTH + theOffset - 1;
+        while (offset != loopEnd) {
+            add(myNodes[++offset]);
+            if (offset < loopEnd) {
+                add(myLeftRightLabels[offset]);
+            }
+        }
     }
 
     /**

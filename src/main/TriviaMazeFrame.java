@@ -44,24 +44,14 @@ public class TriviaMazeFrame extends JFrame {
     public static final String SAVE_FILE = "save.ser";
 
     /**
-     * The width of the main window.
-     */
-    public static final int MAIN_WIDTH = 1200;
-
-    /**
-     * The height of the main window.
-     */
-    public static final int MAIN_HEIGHT = 950;
-
-    /**
      * The width of the view in the main window.
      */
-    public static final int VIEW_WIDTH = 800;
+    public static final int VIEW_WIDTH = 200 * Model.ROW_LENGTH;
 
     /**
      * The height of the view in the main window.
      */
-    public static final int VIEW_HEIGHT = 900;
+    public static final int VIEW_HEIGHT = 100 + (Model.END_NODE + 1) / Model.ROW_LENGTH * 200;
 
     /**
      * The width of the controller in the main window.
@@ -72,7 +62,21 @@ public class TriviaMazeFrame extends JFrame {
      * The height of the controller in the main window.
      */
     public static final int CONTROLLER_HEIGHT = 900;
-    public static final ImageIcon ESRB_IMAGE = new ImageIcon("E_rtg.png");
+
+    /**
+     * The width of the main window.
+     */
+    public static final int MAIN_WIDTH = CONTROLLER_WIDTH + VIEW_WIDTH;
+
+    /**
+     * The height of the main window.
+     */
+    public static final int MAIN_HEIGHT = (Math.max(VIEW_HEIGHT, CONTROLLER_HEIGHT)) + 60;
+
+    /**
+     * The message for an Okay button.
+     */
+    public static final String ACKNOWLEDGE = "Okay";
 
     /**
      * Contains how to play information.
@@ -123,34 +127,36 @@ public class TriviaMazeFrame extends JFrame {
         this.setTitle("Joseph & Armeen's Trivia Maze Game");
         setUpMenuBar();
         setBounds(0, 0, MAIN_WIDTH, MAIN_HEIGHT);
-        final JPanel pane = new JPanel();
-        setContentPane(pane);
-        pane.setLayout(null);
+        setLayout(null);
         myView.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
-        pane.add(myView);
+        add(myView);
         myController.setBounds(VIEW_WIDTH, 0, CONTROLLER_WIDTH, CONTROLLER_HEIGHT);
-        pane.add(myController);
-        this.setVisible(true);
+        add(myController);
+        setVisible(true);
+        setResizable(false);
     }
 
     /**
      * Shows gameplay instructions during startup.
      */
     private void startUpMessage() {
-        final String help = "<html>We'd like to welcome you to our trivia maze game! The objective<br>" + " " +
-                "is to get from the starting point to the finishing point. You may<br>" + " choose the direction " +
-                "to go in by using the directional arrows. After<br> " + "you've decided on a direction, you'll " +
-                "be asked a trivia question. If you<br>" + " answer right, you will go in the intended direction; " +
-                "if you answer incorrectly,<br> " + "the chosen direction will be locked, and you will have to " +
-                "choose another direction.<br> " + "You will lose the game if you do not correctly answer all of" +
-                " the directional trivia questions.<br> " + "Click Help then Gameplay Instructions for additional" +
-                " information. Best of luck!</html>";
+        final String help = "<html>We'd like to welcome you to our trivia maze game!" +
+                "<br>The objective is to get from the starting point to the finishing point." +
+                "<br>You may choose the direction to go in by using the directional arrows." +
+                "<br>After you've decided on a direction, you'll be asked a trivia question." +
+                "<br>If you answer right, you will go in the intended direction;" +
+                "<br>if you answer incorrectly," +
+                "<br>the chosen direction will be locked, and you will have to " +
+                "choose another direction." +
+                "<br>You will lose the game if you do not correctly answer all of" +
+                "the directional trivia questions.<br></html>";
         final JLabel message = new JLabel(help);
-        final JLabel iconRating = new JLabel(ESRB_IMAGE, SwingConstants.LEFT);
+        final ImageIcon esrb = new ImageIcon("E_rtg.png");
+        final JLabel iconRating = new JLabel(esrb, SwingConstants.LEFT);
         iconRating.setVerticalAlignment(SwingConstants.BOTTOM);
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
-        final JButton button = new JButton("Okay"); // TODO Make constant
+        final JButton button = new JButton(ACKNOWLEDGE);
         final JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(button, BorderLayout.LINE_END);
         bottomPanel.setBackground(Color.LIGHT_GRAY);
@@ -162,7 +168,6 @@ public class TriviaMazeFrame extends JFrame {
         myHelpFrame = new JFrame("Welcome");
         myHelpFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         myHelpFrame.getContentPane().add(mainPanel);
-        myHelpFrame.setSize(600, 650);
         myHelpFrame.setLayout(new GridLayout());
         myHelpFrame.pack();
         myHelpFrame.setLocationRelativeTo(null);
@@ -212,8 +217,8 @@ public class TriviaMazeFrame extends JFrame {
         final JMenuItem aboutMenuItem = new JMenuItem("About");
         final JMenuItem howToPlayMenuItem = new JMenuItem("Game Play instructions");
         final JMenuItem cheatMenuItem = new JMenuItem("Cheats");
-        final String about = "This is Trivia Maze, produced for TCSS360 B," + "made by Armeen Farange and Joseph " +
-                "Graves in 2021.";
+        final String about = "This is Trivia Maze, produced for TCSS360 B, "
+                + "made by Armeen Farange and Joseph Graves in 2021.";
         aboutMenuItem.addActionListener(e -> JOptionPane.showMessageDialog(null, about));
         howToPlayMenuItem.addActionListener(e -> myHelpFrame.setVisible(true));
         cheatMenuItem.addActionListener(e -> cheatMenuLayout());
@@ -227,35 +232,34 @@ public class TriviaMazeFrame extends JFrame {
      * Cheat menu layout.
      */
     private void cheatMenuLayout() {
-        final JFrame f2 = new JFrame("Cheat menu");
-        final JPanel p = new JPanel(); // TODO Not descriptive variable names
-        final JMenuBar mb = new JMenuBar();
-        final JButton c1 = new JButton("Answers to All Trivia Questions");
-        final JButton c2 = new JButton("Unlock All Paths");
-        final JButton c3 = new JButton();
-        c3.setText("Answer Cheat: " + myController.getAnswerCheat().toString());
-        final JButton c4 = new JButton("Set player position");
-        c1.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
-        c2.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
-        c3.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
-        c4.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
-        f2.add(p);
-        p.add(c1);
-        p.add(c2);
-        p.add(c3);
-        p.add(c4);
-        p.setLayout(new GridLayout(0, 1));
-        f2.setJMenuBar(mb);
-        f2.setSize(600, 250); // TODO Magic Numbers
-        f2.setVisible(true);
-        f2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        c1.addActionListener(e -> cheatMenuAnswers());
-        c2.addActionListener(e -> cheatMenuVertexReset());
-        c3.addActionListener(e -> {
+        final JFrame frame = new JFrame("Cheat menu");
+        final JButton cheatAnswerKey = new JButton("Answers to All Trivia Questions");
+        final JButton cheatUnlockPaths = new JButton("Unlock All Paths");
+        final JButton cheatShowAnswer = new JButton("Answer Cheat: "
+                                                + myController.getAnswerCheat().toString());
+        final JButton cheatSetPosition = new JButton("Set player position");
+        cheatAnswerKey.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        cheatUnlockPaths.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        cheatShowAnswer.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        cheatSetPosition.setBorder(BorderFactory.createBevelBorder(1, Color.red, Color.blue));
+        frame.add(cheatAnswerKey);
+        frame.add(cheatUnlockPaths);
+        frame.add(cheatShowAnswer);
+        frame.add(cheatSetPosition);
+        frame.setLayout(new GridLayout(0, 1));
+        final int width = 600;
+        final int height = 250;
+        frame.setSize(width, height);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        cheatAnswerKey.addActionListener(e -> cheatMenuAnswers());
+        cheatUnlockPaths.addActionListener(e -> cheatMenuVertexReset());
+        cheatShowAnswer.addActionListener(e -> {
             myController.setMyAnswerCheat(!myController.getAnswerCheat());
-            c3.setText("Answer Cheat: " + myController.getAnswerCheat().toString());
+            cheatShowAnswer.setText("Answer Cheat: "
+                    + myController.getAnswerCheat().toString());
         });
-        c4.addActionListener(e -> cheatMenuPlayerPositionSet());
+        cheatSetPosition.addActionListener(e -> cheatMenuPlayerPositionSet());
     }
 
     /**
@@ -285,15 +289,12 @@ public class TriviaMazeFrame extends JFrame {
      */
     private void cheatMenuAnswers() {
         final JLabel message = new JLabel(getAnswerKeyString());
-        final JLabel iconRating = new JLabel(ESRB_IMAGE, SwingConstants.LEFT);
-        iconRating.setVerticalAlignment(SwingConstants.BOTTOM);
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
-        final JButton button = new JButton("Okay");
+        final JButton button = new JButton(ACKNOWLEDGE);
         final JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(button, BorderLayout.LINE_END);
         bottomPanel.setBackground(Color.LIGHT_GRAY);
-        bottomPanel.add(iconRating);
         final JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
         frame.setBackground(Color.LIGHT_GRAY);
@@ -316,7 +317,8 @@ public class TriviaMazeFrame extends JFrame {
      */
     private void cheatMenuPlayerPositionSet() {
         final JFrame frame = new JFrame("Set Player Position");
-        frame.setLayout(new GridLayout(4, 4)); //TODO More magic numbers.
+        frame.setLayout(new GridLayout((Model.END_NODE + 1) / Model.ROW_LENGTH,
+                                        Model.ROW_LENGTH));
         for (int i = 0; i < Model.END_NODE + 1; i++) {
             final JButton button = new JButton(i + "");
             final int finalI = i;
@@ -326,7 +328,9 @@ public class TriviaMazeFrame extends JFrame {
         }
         frame.setVisible(true);
         frame.pack();
-        frame.setSize(300, 300);
+        final int buttonWidthAndHeight = 75;
+        frame.setSize(buttonWidthAndHeight * Model.ROW_LENGTH,
+                buttonWidthAndHeight * ((Model.END_NODE + 1) / Model.ROW_LENGTH));
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
