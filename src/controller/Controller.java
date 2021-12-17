@@ -5,11 +5,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Stream;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,11 +27,7 @@ import view.GameSound;
  */
 public class Controller extends JPanel implements PropertyChangeListener {
 
-    /**
-     * The deck of questions being asked in Trivia Maze.
-     */
-    public static final TriviaDeck QUESTION_DECK =
-            new SQLTriviaDeck("trivia.db");
+
 
     /**
      * The font size of the Question label.
@@ -98,6 +94,12 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public static final int MOVEMENT_HEIGHT = 128;
 
+
+    /**
+     * The deck of questions being asked in Trivia Maze.
+     */
+    private TriviaDeck myQuestionDeck;
+
     /**
      * Determines whether to mark the correct answer on the answer buttons.
      */
@@ -143,6 +145,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     private Controller() {
         //Not used.
+        initDatabase();
     }
 
     /**
@@ -152,6 +155,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     public Controller(final Model theModel) {
         super();
         myModel = theModel;
+        initDatabase();
         setLayout(null);
         createQuestionBox();
         this.add(createMovementGrid());
@@ -177,6 +181,40 @@ public class Controller extends JPanel implements PropertyChangeListener {
      */
     public Boolean getAnswerCheat() {
         return myAnswerCheat;
+    }
+
+
+    /**
+     * Returns a String representing the questions and their answers.
+     * @return a String representing the questions and their answers.
+     */
+    public String getAnswerKeyString() {
+        final StringBuilder builder = new StringBuilder("<html><ul>");
+        final List<Question> questions = ((SQLTriviaDeck) myQuestionDeck).
+                getQuestionList();
+        for (Question question : questions) {
+            final Optional<Map.Entry<String, Boolean>> optional = question.getAnswerMap().
+                    entrySet().stream().filter(Map.Entry::getValue).findFirst();
+            String answer = "";
+            if (optional.isPresent()) {
+                answer = optional.get().getKey();
+            }
+            builder.append("<li>").append(question.getQuestionString()).
+                    append(": ").append(answer).append("</li>");
+        }
+
+        return builder.append("</ul></html>").toString();
+    }
+
+    /**
+     * Checks if trivia.db exists in the file directory, if it doesn't loads from jar.
+     */
+    private void initDatabase() {
+        if ((new File("trivia.db")).exists()) {
+            myQuestionDeck = new SQLTriviaDeck("trivia.db");
+        } else {
+            myQuestionDeck = new SQLTriviaDeck(":resource:trivia.db");
+        }
     }
 
     /**
@@ -245,7 +283,7 @@ public class Controller extends JPanel implements PropertyChangeListener {
     private void queueAnswerButtons(final Direction theDirection) {
         disableMovement();
         GameSound.playSound("movement_queue.wav", false);
-        final Question question = QUESTION_DECK.getQuestion();
+        final Question question = myQuestionDeck.getQuestion();
         setQuestionText(question.getQuestionString());
         final int offset = getOffset(theDirection);
         final List<Map.Entry<String, Boolean>> answerList

@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -262,33 +263,12 @@ public class TriviaMazeFrame extends JFrame {
         cheatSetPosition.addActionListener(e -> cheatMenuPlayerPositionSet());
     }
 
-    /**
-     * Returns a String representing the questions and their answers.
-     * @return a String representing the questions and their answers.
-     */
-    private String getAnswerKeyString() {
-        final StringBuilder builder = new StringBuilder("<html><ul>");
-        final List<Question> questions = ((SQLTriviaDeck) Controller.QUESTION_DECK).
-                getQuestionList();
-        for (Question question : questions) {
-            final Optional<Map.Entry<String, Boolean>> optional = question.getAnswerMap().
-                    entrySet().stream().filter(Map.Entry::getValue).findFirst();
-            String answer = "";
-            if (optional.isPresent()) {
-                answer = optional.get().getKey();
-            }
-            builder.append("<li>").append(question.getQuestionString()).
-                    append(": ").append(answer).append("</li>");
-        }
-
-        return builder.append("</ul></html>").toString();
-    }
 
     /**
      * Cheat menu answers.
      */
     private void cheatMenuAnswers() {
-        final JLabel message = new JLabel(getAnswerKeyString());
+        final JLabel message = new JLabel(myController.getAnswerKeyString());
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
         final JButton button = new JButton(ACKNOWLEDGE);
