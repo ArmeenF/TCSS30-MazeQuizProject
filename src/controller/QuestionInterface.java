@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * An interface for the question class, which holds a question with a potential answer.
- * @author Joseph Graves
+ * @author Joseph Graves, Armeen Farange
  * @version Fall 2021
  */
 public interface QuestionInterface {
