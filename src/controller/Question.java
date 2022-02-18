@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Data representing a question. Includes true and false answers.
- * @author Joseph Graves
+ * @author Joseph Graves, Armeen Farange
  * @version Fall 2021
  */
 public final class Question implements QuestionInterface {
