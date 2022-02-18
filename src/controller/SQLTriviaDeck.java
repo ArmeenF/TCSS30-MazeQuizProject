@@ -13,7 +13,7 @@ import org.sqlite.SQLiteDataSource;
 
 /**
  * A trivia deck designed to take input from an SQLite database.
- * @author Joseph Graves
+ * @author Joseph Graves, Armeen Farange
  * @version Fall 2021
  */
 public class SQLTriviaDeck implements TriviaDeck {
